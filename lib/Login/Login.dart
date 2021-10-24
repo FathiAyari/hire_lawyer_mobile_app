@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hire_lawyer/HomePage/HomePage.dart';
+import 'package:hire_lawyer/Register/infoMessage.dart';
 
-import '../CreateAccount.dart';
-import '../ForgotPassword.dart';
-import '../Strings.dart';
+import '../Register/CreateAccount.dart';
+import '../ForgotPassword/ForgotPassword.dart';
+import '../Values/Strings.dart';
 import 'ActionButton.dart';
 import 'DividerBox.dart';
 import 'FormFieldPassword.dart';
@@ -19,8 +21,27 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   bool obscureText=true;
    Widget SuffixPassword=Icon(Icons.visibility);
-  TextEditingController email= TextEditingController();
-  TextEditingController password= TextEditingController();
+  TextEditingController emailController= TextEditingController();
+  TextEditingController passwordController= TextEditingController();
+  String verifyInput() {
+    String result ="";
+
+     if(emailController.text.isEmpty || ! validateEmail(emailController.text)){
+
+      result+="Veuillez verifier l'email";
+    }
+    else if(passwordController.text.isEmpty){
+      result+= "Veuillez verifier le mot de passe ";
+    }
+    return result;
+  }
+  registerUser(BuildContext context){
+    String str=verifyInput();
+    if (str.isNotEmpty) {
+      InfoMessage(message: str).show(context);
+    }
+  }
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     Size size =MediaQuery.of(context).size;
@@ -58,9 +79,11 @@ class _LoginState extends State<Login> {
 
 
 
-                emailFormField(size: size, controller: email,preixIcon: Icons.email_outlined,),
+                Form(child: emailFormField(size: size, controller: emailController,preixIcon: Icons.email_outlined,),
+                key: _formKey,
+                ),
 
-                FormFieldPassword(size: size, controller: password,preixIcon:Icons.lock_outline,obscuretext: obscureText,suffixIcon: IconButton(
+                FormFieldPassword(size: size, controller: passwordController,preixIcon:Icons.lock_outline,obscuretext: obscureText,suffixIcon: IconButton(
                   icon: obscureText ?SuffixPassword:Icon(Icons.visibility_off),
                   color: obscureText ? Colors.blueAccent:Colors.white,
                   onPressed: (){
@@ -75,12 +98,13 @@ class _LoginState extends State<Login> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 60,vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 60,vertical: 45),
               child: Container(
 
                 alignment: Alignment.centerRight,
-                child: GestureDetector(child:Text("Mot de pass oublié ?",
+                child: GestureDetector(child:Text("Mot de passe oublié ?",
                     style: TextStyle(
+                      fontSize: 15,
                       color: Colors.blueAccent,
                       decoration: TextDecoration.underline,
 
@@ -91,10 +115,13 @@ class _LoginState extends State<Login> {
                 ),
               ),
             ),
-            BuildLoginButton(size,ConstStrings.Login),
+            BuildLoginButton(size,ConstStrings.Login,(){
+
+              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HomePage()));
+            }),
 
             Container(
-              padding:  EdgeInsets.only(top:50, bottom: 30),
+              padding:  EdgeInsets.only(top:200, bottom: 10),
               decoration: BoxDecoration(
                   border: Border(bottom: BorderSide(
                     color: Colors.white,  // Text colour here
@@ -107,6 +134,7 @@ class _LoginState extends State<Login> {
               }, child:Text("Créer un compte ",
               style: TextStyle(
                 color: Colors.white,
+                fontSize: 20
 
               ),),
               ),

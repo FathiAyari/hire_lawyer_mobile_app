@@ -85,6 +85,9 @@ flutter:
     - family: NewsCycle-Bold
       fonts:
         - asset: fonts/NewsCycle-Bold.ttf
+    - family: EBGaramond
+      fonts:
+        - asset: fonts/EBGaramond-VariableFont_wght.ttf
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

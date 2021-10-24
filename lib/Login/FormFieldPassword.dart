@@ -25,7 +25,7 @@ class FormFieldPassword extends StatelessWidget {
           controller:  controller,
           obscureText: obscuretext,
           decoration: InputDecoration(
-              hintText: "Password",
+              hintText: "Mot de passe",
 
               hintStyle:TextStyle(
                 color: Colors.blueAccent,

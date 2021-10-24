@@ -21,9 +21,13 @@ class emailFormField extends StatelessWidget {
       child: Container(
         height: size.height * 0.1,
         child:  TextFormField(
+          keyboardType: TextInputType.emailAddress,
+
+
           controller:  controller,
 
           decoration: InputDecoration(
+
               hintText: "Email",
 
               hintStyle:TextStyle(

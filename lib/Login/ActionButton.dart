@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Padding BuildLoginButton(Size size , String label) {
+Padding BuildLoginButton(Size size , String label,Function press) {
   return Padding(
 
     padding: const EdgeInsets.symmetric(horizontal: 60),
@@ -9,7 +9,7 @@ Padding BuildLoginButton(Size size , String label) {
 
       height: size.height * 0.07,
       width: double.infinity,
-      child: ElevatedButton(onPressed: (){}, child: Text("$label"),
+      child: ElevatedButton(onPressed: press, child: Text("$label"),
         style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         )

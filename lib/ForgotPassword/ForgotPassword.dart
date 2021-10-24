@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hire_lawyer/Login/Login.dart';
 
-import 'Login/ActionButton.dart';
-import 'Login/emailFormField.dart';
-import 'Strings.dart';
+import '../Login/ActionButton.dart';
+import '../Login/emailFormField.dart';
+import '../Values/Strings.dart';
 
 class ForgotPassword extends StatefulWidget {
 
@@ -68,7 +68,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                ),
              ),
              emailFormField(size: size, controller: email,preixIcon: Icons.email_outlined,),
-             BuildLoginButton(size,ConstStrings.Reset),
+             BuildLoginButton(size,ConstStrings.Reset,(){
+               print("hello");
+             }),
 
            ],
           ),

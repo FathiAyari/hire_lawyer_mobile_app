@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hire_lawyer/Login/Login.dart';
 import 'package:hire_lawyer/onboardingPage/Onboarding.dart';
-import 'package:hire_lawyer/splash_screen.dart';
+import 'package:hire_lawyer/splashScreen/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 int isViewed;
 Future<void> main() async {
