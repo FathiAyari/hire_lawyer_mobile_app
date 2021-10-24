@@ -4,6 +4,8 @@ import 'package:hire_lawyer/Login/Login.dart';
 import 'package:hire_lawyer/onboardingPage/Onboarding.dart';
 import 'package:hire_lawyer/splashScreen/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'Lawyers.dart';
 int isViewed;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +41,11 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
+      routes: {
+        '/lawyers': (context) => Lawyers(),
+      },
       home: Scaffold(
+
         body: SplasScreen(),
       ),
     );

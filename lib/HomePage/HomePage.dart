@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hire_lawyer/Login/ActionButton.dart';
 
+import '../Messages.dart';
+import '../ProfileClient.dart';
 import 'Pages.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,11 +18,17 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     Size size =MediaQuery.of(context).size;
-    List pages=[buildHomePage(size,connected,(){
+    List pages=[
+      buildHomePage(size,connected,(){
       setState(() {
         this.connected=!connected;
       });
-    })];
+    }),
+      buildMessages(context),
+      buildProfile(context),
+
+
+    ];
     return Scaffold(
 backgroundColor: Colors.white,
       body: SafeArea(
