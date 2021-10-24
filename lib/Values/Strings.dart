@@ -9,5 +9,7 @@ class ConstStrings{
   static const  String Lawyers ="les avocats";
   static const  String Messgaes ="Messgaes";
   static const  String Profile ="Mon Profile";
+  static const  String Logout ="Deconnexion";
+  static const  String Confirm ="Confirmer le changement";
 
   }

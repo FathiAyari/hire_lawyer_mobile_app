@@ -1,3 +1,4 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hire_lawyer/Login/ActionButton.dart';
@@ -14,6 +15,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
   bool connected=true;
+  List <Widget>items=[
+     Icon(Icons.home_outlined),
+     Icon(Icons.email_outlined),
+     Icon(Icons.account_circle_outlined)
+
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -30,28 +37,27 @@ class _HomePageState extends State<HomePage> {
 
     ];
     return Scaffold(
-backgroundColor: Colors.white,
+
       body: SafeArea(
 
-        child: pages[currentIndex],
+        child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(bottomRight:  Radius.circular(40),bottomLeft:  Radius.circular(40),)
+            ),
+          child: pages[currentIndex],
+        ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        currentIndex: currentIndex,
+      bottomNavigationBar: CurvedNavigationBar(
+        buttonBackgroundColor:Color(0xff848DFF),
+        backgroundColor: Color(0xffEAEDEF),
+        height: 60,
+        index: currentIndex,
         onTap: (int index) {
           setState(() {
             currentIndex=index;
           });
         },
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined), label: "L'accueil"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.email_outlined), label: "Messages"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle_outlined), label: "Profile"),
-        ],
+        items: items,
       ),
     );
   }

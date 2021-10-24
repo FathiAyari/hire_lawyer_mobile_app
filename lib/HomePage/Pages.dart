@@ -11,52 +11,61 @@ Widget buildHomePage(Size size, bool connected, Function press) {
     Content(image: 'assets/images/employement.png', footer: 'Droit de travaille'),
   ];
 
-  return Column(
-    children: [
-      Row(
+  return Scaffold(
+
+    body: Container(
+      decoration: BoxDecoration(
+        color:  Color(0xffEAEDEF),
+
+      ),
+      child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              alignment: Alignment.centerLeft,
-              child: CircleAvatar(
-                backgroundColor: connected == true ? Colors.green : Colors.red,
-                radius: 40,
-                child: InkWell(
-                  onTap: press,
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  alignment: Alignment.centerLeft,
                   child: CircleAvatar(
-                    child: Image.asset('assets/images/logo.png'),
-                    backgroundColor: Colors.white,
-                    radius: 35,
+                    backgroundColor: connected == true ? Colors.green : Colors.red,
+                    radius: 40,
+                    child: InkWell(
+                      onTap: press,
+                      child: CircleAvatar(
+                        child: Image.asset('assets/images/logo.png'),
+                        backgroundColor: Colors.white,
+                        radius: 35,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+              Container(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Bienvenue Fathi.",
+                  style: TextStyle(
+                      fontSize: size.height * 0.035, fontFamily: "EBGaramond"),
+                ),
+              ),
+            ],
           ),
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "Bienvenue Fathi.",
-              style: TextStyle(
-                  fontSize: size.height * 0.035, fontFamily: "EBGaramond"),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GridView.builder(
+                itemCount: contentList.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: (2), crossAxisSpacing: 5, mainAxisSpacing: 5),
+                itemBuilder: (context, int index) {
+                  return contentList[index];
+                },
+              ),
             ),
-          ),
+          )
         ],
       ),
-      Expanded(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GridView.builder(
-            itemCount: contentList.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: (2), crossAxisSpacing: 5, mainAxisSpacing: 5),
-            itemBuilder: (context, int index) {
-              return contentList[index];
-            },
-          ),
-        ),
-      )
-    ],
+    ),
   );
 }
 

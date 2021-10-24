@@ -34,8 +34,7 @@ class emailFormField extends StatelessWidget {
                 color: Colors.blueAccent,
               ),
               suffixIcon: (suffixIcon),
-              prefixIcon: Icon(preixIcon,
-                color: Colors.blueAccent,),
+
               fillColor: Colors.white10,// the color of the inside box field
               filled: true,
 

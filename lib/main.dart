@@ -5,7 +5,7 @@ import 'package:hire_lawyer/onboardingPage/Onboarding.dart';
 import 'package:hire_lawyer/splashScreen/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Lawyers.dart';
+import 'Lawyers/Lawyers.dart';
 int isViewed;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
