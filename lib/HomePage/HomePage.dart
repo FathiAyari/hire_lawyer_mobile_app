@@ -11,11 +11,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
+  bool connected=true;
 
   @override
   Widget build(BuildContext context) {
     Size size =MediaQuery.of(context).size;
-    List pages=[buildHomePage(size)];
+    List pages=[buildHomePage(size,connected,(){
+      setState(() {
+        this.connected=!connected;
+      });
+    })];
     return Scaffold(
 backgroundColor: Colors.white,
       body: SafeArea(
