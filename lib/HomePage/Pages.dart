@@ -56,7 +56,7 @@ Widget buildHomePage(Size size, bool connected, Function press) {
               child: GridView.builder(
                 itemCount: contentList.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: (2), crossAxisSpacing: 5, mainAxisSpacing: 5),
+                    crossAxisCount: (2), crossAxisSpacing: 15, mainAxisSpacing: 15),
                 itemBuilder: (context, int index) {
                   return contentList[index];
                 },

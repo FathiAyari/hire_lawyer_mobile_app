@@ -50,6 +50,7 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: CurvedNavigationBar(
         buttonBackgroundColor:Color(0xff848DFF),
         backgroundColor: Color(0xffEAEDEF),
+        animationDuration: Duration(milliseconds: 700),
         height: 60,
         index: currentIndex,
         onTap: (int index) {
