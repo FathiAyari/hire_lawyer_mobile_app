@@ -1,7 +1,12 @@
+
+
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hire_lawyer/Register/registerController.dart';
 import 'package:hire_lawyer/Values/Strings.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../Login/ActionButton.dart';
 import '../Login/DividerBox.dart';
@@ -24,6 +29,16 @@ class _CreateAccountState extends State<CreateAccount> {
   TextEditingController usernameController=TextEditingController();
   Widget SuffixPassword=Icon(Icons.visibility);
   bool obscureText=true;
+  File _image;
+  Future getProfileImage()async{
+    final image=await ImagePicker().pickImage(
+      source: ImageSource.gallery ,
+    );
+    final imageTemporary=File(image.path);
+    setState(() {
+      _image=imageTemporary;
+    });
+  }
   String verifyInput() {
     String result ="";
     if(usernameController.text.isEmpty ){
@@ -90,19 +105,22 @@ class _CreateAccountState extends State<CreateAccount> {
                 children: [
 
                CircleAvatar(
-                 backgroundColor: Colors.white54,
+                 backgroundColor: Colors.white38,
                  radius: 80,
-                 child: Icon(Icons.account_circle_outlined,
-                 color: Colors.black26,
-                 size: 40,),
+                backgroundImage: _image==null? AssetImage('assets/images/user.png'):FileImage(_image) ,
                ),
                   Padding(
                     padding: const EdgeInsetsDirectional.only(bottom: 10,end: 2),
                     child: CircleAvatar(
                     backgroundColor:Colors.transparent,
-                      child: Icon(Icons.add_photo_alternate_sharp,
-                      color: Colors.blueAccent,
-                      size: 40,),
+                      child:IconButton(
+                        onPressed: (){
+                          getProfileImage();
+                        },
+                          icon:Icon(Icons.add_photo_alternate_sharp,
+                            color: Colors.blueAccent,
+                            size: 40,)
+                      ),
                     ),
                   ),
 
