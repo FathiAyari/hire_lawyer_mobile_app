@@ -67,7 +67,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                  ),),
                ),
              ),
-             emailFormField(size: size, controller: email,preixIcon: Icons.email_outlined,),
+             emailFormField(size: size, controller: email,prefixIcon: Icons.email_outlined,),
              BuildLoginButton(size,ConstStrings.Reset,(){
                print("hello");
              }),

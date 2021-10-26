@@ -131,7 +131,7 @@ class _CreateAccountState extends State<CreateAccount> {
               ),
               DividerBox(size: size,height: 0.01,),
               nameFormField(size: size, controller: usernameController,preixIcon: Icons.account_circle_sharp,),
-              emailFormField(size: size, controller: emailController,preixIcon: Icons.email_outlined,),
+              emailFormField(size: size, controller: emailController,prefixIcon: Icons.email_outlined,),
               FormFieldPassword(size: size, controller: passwordController,preixIcon:Icons.lock_outline,obscuretext: obscureText,suffixIcon: IconButton(
                 icon: obscureText ?SuffixPassword:Icon(Icons.visibility_off),
                 color: obscureText ? Colors.blueAccent:Colors.white,

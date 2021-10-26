@@ -80,7 +80,7 @@ class _LoginState extends State<Login> {
 
 
 
-                  Form(child: emailFormField(size: size, controller: emailController,preixIcon: Icons.email_outlined,),
+                  Form(child: emailFormField(size: size, controller: emailController,prefixIcon: Icons.email_outlined,),
                   key: _formKey,
                   ),
 

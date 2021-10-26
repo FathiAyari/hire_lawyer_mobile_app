@@ -5,13 +5,13 @@ class emailFormField extends StatelessWidget {
   const emailFormField({
     Key key,
     @required this.size,
-    @required this.controller, this.preixIcon, this.suffixIcon,
+    @required this.controller, this.prefixIcon,
   }) : super(key: key);
 
   final Size size;
 
-  final IconData preixIcon;
-  final IconButton suffixIcon;
+  final IconData prefixIcon;
+
   final TextEditingController controller;
 
   @override
@@ -27,13 +27,14 @@ class emailFormField extends StatelessWidget {
           controller:  controller,
 
           decoration: InputDecoration(
-
+              prefixIcon: Icon(prefixIcon,
+                color: Colors.blueAccent,),
               hintText: "Email",
 
               hintStyle:TextStyle(
                 color: Colors.blueAccent,
               ),
-              suffixIcon: (suffixIcon),
+
 
               fillColor: Colors.white10,// the color of the inside box field
               filled: true,
