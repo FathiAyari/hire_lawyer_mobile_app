@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hire_lawyer/Register/registerController.dart';
+
 import 'package:hire_lawyer/Values/Strings.dart';
 import 'package:image_picker/image_picker.dart';
 

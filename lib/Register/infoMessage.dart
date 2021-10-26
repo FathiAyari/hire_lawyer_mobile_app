@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 
 class InfoMessage extends StatelessWidget {
   final String message;
+  final Function press;
 
-  InfoMessage({ this.message});
+  InfoMessage({ this.message, this.press});
 
   show(BuildContext context) {
     showDialog(
@@ -26,9 +27,7 @@ class InfoMessage extends StatelessWidget {
             height: 20,
           ),
           ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
+              onPressed: press,
               child: Text("Confirmer"))
         ],
       ),

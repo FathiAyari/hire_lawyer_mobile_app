@@ -38,8 +38,10 @@ class _LoginState extends State<Login> {
   registerUser(BuildContext context){
     String str=verifyInput();
     if (str.isNotEmpty) {
-      InfoMessage(message: str).show(context);
-    }
+      InfoMessage(message: str,press:() {
+        Navigator.pop(context);
+      },).show(context);
+    }else Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HomePage()));
   }
   final _formKey = GlobalKey<FormState>();
   @override
@@ -116,7 +118,7 @@ class _LoginState extends State<Login> {
               ),
               BuildLoginButton(size,ConstStrings.Login,(){
 
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HomePage()));
+                registerUser(context);
               }),
 
               Container(

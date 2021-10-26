@@ -6,6 +6,7 @@ import 'package:hire_lawyer/Login/emailFormField.dart';
 import 'HomePage/HomePage.dart';
 import 'Login/ActionButton.dart';
 import 'Login/Login.dart';
+import 'Register/infoMessage.dart';
 import 'Values/Strings.dart';
 
 Widget buildProfile(BuildContext context){
@@ -96,7 +97,9 @@ Widget buildProfile(BuildContext context){
             alignment: Alignment.center,
             child: BuildLoginButton(size,ConstStrings.Logout,(){
 
-              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Login()));
+              InfoMessage(message: "Vous etes sure de deconnecter ?",press:() {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Login()));
+              },).show(context);
             }),
           ),
         ),
