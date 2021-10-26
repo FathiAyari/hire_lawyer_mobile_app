@@ -102,7 +102,8 @@ class Content extends StatelessWidget {
             Expanded(
               child: Container(
                 alignment: Alignment.center,
-                child: Text(footer),
+                child: Text(footer,
+                textAlign: TextAlign.center,),
               ),
             )
           ],

@@ -87,7 +87,9 @@ Widget buildProfile(BuildContext context){
           padding: const EdgeInsets.only(top:20),
           child: Container(
             child: BuildLoginButton(size,ConstStrings.Confirm,(){
-
+              InfoMessage(message: "êtes-vous sûr de mettre à jour vos données ?",press:() {
+Navigator.pop(context);
+              },).show(context);
 
             }),
           ),
@@ -97,7 +99,7 @@ Widget buildProfile(BuildContext context){
             alignment: Alignment.center,
             child: BuildLoginButton(size,ConstStrings.Logout,(){
 
-              InfoMessage(message: "Vous etes sure de deconnecter ?",press:() {
+              InfoMessage(message: "êtes-vous sûr de se déconnecter ?",press:() {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Login()));
               },).show(context);
             }),
