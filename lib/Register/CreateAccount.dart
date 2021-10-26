@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hire_lawyer/HomePage/HomePage.dart';
 
 import 'package:hire_lawyer/Values/Strings.dart';
 import 'package:image_picker/image_picker.dart';
@@ -56,8 +57,10 @@ class _CreateAccountState extends State<CreateAccount> {
   registerUser(BuildContext context){
     String str=verifyInput();
     if (str.isNotEmpty) {
-      InfoMessage(message: str).show(context);
-    }
+      InfoMessage(message: str,press:() {
+        Navigator.pop(context);
+      },).show(context);
+    }else Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HomePage()));
   }
   @override
   Widget build(BuildContext context) {

@@ -35,7 +35,7 @@ class _LoginState extends State<Login> {
     }
     return result;
   }
-  registerUser(BuildContext context){
+  loginerUser(BuildContext context){
     String str=verifyInput();
     if (str.isNotEmpty) {
       InfoMessage(message: str,press:() {
@@ -118,7 +118,7 @@ class _LoginState extends State<Login> {
               ),
               BuildLoginButton(size,ConstStrings.Login,(){
 
-                registerUser(context);
+                loginerUser(context);
               }),
 
               Container(
