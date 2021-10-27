@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:hire_lawyer/splashScreen/splash_screen.dart';
 
@@ -9,6 +9,7 @@ import 'Lawyers/Lawyers.dart';
 int isViewed;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.blue,
@@ -24,7 +25,7 @@ Future<void> main() async {
   ]);
 
 
-
+  await Firebase.initializeApp();
   runApp( MyApp());
 }
 
