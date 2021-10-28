@@ -168,8 +168,11 @@ class _LoginState extends State<Login> {
      Navigator.push(context,MaterialPageRoute(builder: (context)=>HomePage()));
    }catch(e){
      return  InfoMessage(
-       message:"Vottre email ou bien mot de passe est incorrect",
+       message:"Votre email ou bien mot de passe est incorrect",
        press: () {
+         setState(() {
+           loading=!loading;
+         });
          Navigator.pop(context);
        },
      ).show(context);;

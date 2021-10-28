@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hire_lawyer/Login/DividerBox.dart';
 import 'package:hire_lawyer/Login/emailFormField.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'HomePage/HomePage.dart';
 import 'Login/ActionButton.dart';
 import 'Login/Login.dart';
@@ -99,7 +99,8 @@ Navigator.pop(context);
             alignment: Alignment.center,
             child: BuildLoginButton(size,ConstStrings.Logout,(){
 
-              InfoMessage(message: "êtes-vous sûr de se déconnecter ?",press:() {
+              InfoMessage(message: "êtes-vous sûr de se déconnecter ?",press:()async {
+                await FirebaseAuth.instance.signOut();
                 Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Login()));
               },).show(context);
             }),
