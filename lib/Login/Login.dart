@@ -126,9 +126,9 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
-             BuildLoginButton(size, ConstStrings.Login, () {
+             !loading?BuildLoginButton(size, ConstStrings.Login, () {
                 loginerUserVerif(context);
-              }),
+              }):CircularProgressIndicator.adaptive(),
               Container(
                 padding: EdgeInsets.only(top: 200, bottom: 10),
                 decoration: BoxDecoration(
@@ -207,7 +207,7 @@ class _LoginState extends State<Login> {
          message:"Votre email ou bien mot de passe est incorrect",
          press: () {
            setState(() {
-             loading=!loading;
+             loading=false;
            });
            Navigator.pop(context);
          },
