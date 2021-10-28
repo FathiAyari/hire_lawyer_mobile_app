@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hire_lawyer/HomePage/HomePage.dart';
 import 'package:hire_lawyer/Register/infoMessage.dart';
-
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import '../Register/CreateAccount.dart';
 import '../ForgotPassword/ForgotPassword.dart';
 import '../Values/Strings.dart';
@@ -11,6 +11,7 @@ import 'DividerBox.dart';
 import 'FormFieldPassword.dart';
 import 'emailFormField.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -18,6 +19,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  bool hasConnection=false;
   bool loading =false;
   bool obscureText = true;
   Widget SuffixPassword = Icon(Icons.visibility);
@@ -124,9 +126,9 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
-              !loading?BuildLoginButton(size, ConstStrings.Login, () {
+             BuildLoginButton(size, ConstStrings.Login, () {
                 loginerUserVerif(context);
-              }):CircularProgressIndicator(),
+              }),
               Container(
                 padding: EdgeInsets.only(top: 200, bottom: 10),
                 decoration: BoxDecoration(
@@ -156,7 +158,21 @@ class _LoginState extends State<Login> {
       ),
     );
   }
-
+  void showcustomSnackBar(BuildContext context,String content) {
+    final snackbar = SnackBar(
+      content: Text('$content'),
+      backgroundColor: Colors.green,
+      shape: StadiumBorder(),
+      elevation: 0,
+      duration: Duration(seconds: 1),
+    );
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(snackbar);
+    setState(() {
+      loading=false;
+    });
+  }
   Future<void> SignIn() async {
    try{ Future.delayed(Duration(milliseconds: 100), () {
      setState(() {
@@ -166,16 +182,39 @@ class _LoginState extends State<Login> {
      await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text);
 
      Navigator.push(context,MaterialPageRoute(builder: (context)=>HomePage()));
-   }catch(e){
-     return  InfoMessage(
-       message:"Votre email ou bien mot de passe est incorrect",
-       press: () {
-         setState(() {
-           loading=!loading;
-         });
-         Navigator.pop(context);
-       },
-     ).show(context);;
+   }catch(e) {
+     hasConnection=await InternetConnectionChecker().hasConnection;
+     if(hasConnection==false){
+       setState(() {
+         loading=!loading;
+       });
+
+       return  InfoMessage(
+         message:"Verfiez votre connexion internet ",
+         press: () {
+           setState(() {
+             loading=!loading;
+           });
+           Navigator.pop(context);
+         },
+       ).show(context);
+
+     }else   {
+       setState(() {
+         loading=!loading;
+       });
+       return  InfoMessage(
+         message:"Votre email ou bien mot de passe est incorrect",
+         press: () {
+           setState(() {
+             loading=!loading;
+           });
+           Navigator.pop(context);
+         },
+       ).show(context);
+     }
+
+
    }
   }
 }
