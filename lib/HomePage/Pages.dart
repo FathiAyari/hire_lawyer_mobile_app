@@ -1,7 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+class buildHomePage extends StatefulWidget {
+  final bool connected;
+  final Function press;
 
-Widget buildHomePage(Size size, bool connected, Function press) {
+  const buildHomePage({
+
+this.connected, this.press});
+
+  @override
+
+  _buildHomePageState createState() => _buildHomePageState();
+}
+
+class _buildHomePageState extends State<buildHomePage> {
+String userEmail;
   List<Content> contentList = [
     Content(image: 'assets/images/family-room.png', footer: 'Droit de la famille'),
     Content(image: 'assets/images/home.png', footer: 'Loi de properiété'),
@@ -11,63 +25,87 @@ Widget buildHomePage(Size size, bool connected, Function press) {
     Content(image: 'assets/images/employement.png', footer: 'Droit de travaille'),
   ];
 
-  return Scaffold(
+  Future<void> getUserData()async{
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = auth.currentUser;
+    final uid = user.email;
 
-    body: Container(
-      decoration: BoxDecoration(
-        color:  Color(0xffEAEDEF),
+    setState(()  {
+    userEmail=uid;
 
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  child: CircleAvatar(
-                    backgroundColor: connected == true ? Colors.green : Colors.red,
-                    radius: 40,
-                    child: InkWell(
-                      onTap: press,
-                      child: CircleAvatar(
-                        child: Image.asset('assets/images/logo.png'),
-                        backgroundColor: Colors.white,
-                        radius: 35,
+  });
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+getUserData();
+  }
+  @override
+
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Scaffold(
+
+      body: Container(
+        decoration: BoxDecoration(
+          color:  Color(0xffEAEDEF),
+
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: CircleAvatar(
+                      backgroundColor: widget.connected == true ? Colors.green : Colors.red,
+                      radius: 40,
+                      child: InkWell(
+                        onTap: widget.press,
+                        child: CircleAvatar(
+                          child: Image.asset('assets/images/logo.png'),
+                          backgroundColor: Colors.white,
+                          radius: 35,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              Container(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Bienvenue Fathi.",
-                  style: TextStyle(
-                      fontSize: size.height * 0.035, fontFamily: "EBGaramond"),
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Bienvenue $userEmail.",
+                      style: TextStyle(
+                          fontSize: size.height * 0.035, fontFamily: "EBGaramond"),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GridView.builder(
+                  itemCount: contentList.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: (2), crossAxisSpacing: 15, mainAxisSpacing: 15),
+                  itemBuilder: (context, int index) {
+                    return contentList[index];
+                  },
                 ),
               ),
-            ],
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GridView.builder(
-                itemCount: contentList.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: (2), crossAxisSpacing: 15, mainAxisSpacing: 15),
-                itemBuilder: (context, int index) {
-                  return contentList[index];
-                },
-              ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
+
 
 class Content extends StatelessWidget {
   final String image;

@@ -9,12 +9,14 @@ import 'Pages.dart';
 
 class HomePage extends StatefulWidget {
   @override
+
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
   bool connected=true;
+  String user;
   List <Widget>items=[
      Icon(Icons.home_outlined),
      Icon(Icons.email_outlined),
@@ -23,10 +25,11 @@ class _HomePageState extends State<HomePage> {
   ];
 
   @override
+
   Widget build(BuildContext context) {
     Size size =MediaQuery.of(context).size;
     List pages=[
-      buildHomePage(size,connected,(){
+      buildHomePage(connected:connected,press:(){
       setState(() {
         this.connected=!connected;
       });

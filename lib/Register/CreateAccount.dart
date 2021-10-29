@@ -16,7 +16,7 @@ import '../Login/Login.dart';
 import '../Login/emailFormField.dart';
 import 'infoMessage.dart';
 import 'nameFormField.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 class CreateAccount extends StatefulWidget {
 
 
@@ -31,6 +31,16 @@ class _CreateAccountState extends State<CreateAccount> {
   Widget SuffixPassword=Icon(Icons.visibility);
   bool obscureText=true;
   File _image;
+
+  Future<void> SignUp() async{
+   try{
+     await FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text);
+print("test");
+
+   }catch(e){
+     print("error here ${e.message}");
+   }
+  }
   Future getProfileImage()async{
     final image=await ImagePicker().pickImage(
       source: ImageSource.gallery ,
@@ -54,13 +64,16 @@ class _CreateAccountState extends State<CreateAccount> {
     }
     return result;
   }
-  registerUser(BuildContext context){
+  registerUserVerification(BuildContext context){
     String str=verifyInput();
     if (str.isNotEmpty) {
       InfoMessage(message: str,press:() {
         Navigator.pop(context);
       },).show(context);
-    }else Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HomePage()));
+    }else {
+      SignUp();
+       Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HomePage()));
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -143,8 +156,8 @@ class _CreateAccountState extends State<CreateAccount> {
                 },
               ),),
               BuildLoginButton(size,ConstStrings.CreateAccount,(){
-                print("yy");
-                registerUser(context);
+
+                registerUserVerification(context);
               }),
               Container(
                 padding:  EdgeInsets.only(top:200, bottom: 10),
@@ -181,6 +194,6 @@ class _CreateAccountState extends State<CreateAccount> {
  bool validateEmail(String value) {
 Pattern pattern =
 r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-RegExp regex = new RegExp(pattern);
+RegExp regex =  RegExp(pattern);
 return (!regex.hasMatch(value)) ? false : true;
 }
