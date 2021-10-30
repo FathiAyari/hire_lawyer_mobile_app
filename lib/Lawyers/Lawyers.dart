@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:hire_lawyer/HomePage/HomePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:hire_lawyer/HomePage/Pages.dart';
+import 'package:hire_lawyer/Login/DividerBox.dart';
+import 'package:firebase_database/firebase_database.dart';
 import '../Values/Strings.dart';
+import 'LawyersLabels.dart';
 import 'lawyerObject.dart';
 
 class Lawyers extends StatefulWidget {
@@ -15,13 +18,35 @@ class Lawyers extends StatefulWidget {
 }
 
 class _LawyersState extends State<Lawyers> {
-  String test="";
-  List lawyersList=[];
-  Future<void> getUserData()async{
+
+  List lawyersList = [""];
+  Map test={};
+  getTest() {
+    var mediaReference =
+        FirebaseDatabase.instance.reference().child("family_law");
+    mediaReference.onValue.listen((event) {
+      lawyersList.clear();
+      test.clear();
+      Map map = Map<String, dynamic>();
+      for (int i = 0; i < event.snapshot.value.length; i++) {
+        map["$i"] = event.snapshot.value[i];
+      }
+      lawyersList.add(map);
+      test=map;
+      print(test);
+      setState(() {
+
+      });
+    });
+
+  }
+
+  /*Future<void> getUserData() async {
     final FirebaseAuth auth = await FirebaseAuth.instance;
     final User user = await auth.currentUser;
     final uid = user.uid;
-    var snapshotName = await FirebaseFirestore
+
+    var snapshotNametest = await FirebaseFirestore
         .instance
         .collection('lawyers')
         .doc("family_law")
@@ -29,29 +54,34 @@ class _LawyersState extends State<Lawyers> {
         .doc("2")
         .snapshots()
         .listen((event) {
-        lawyersList.clear();
-      Map<String, dynamic> firestoreInfo =event.data();
-      firestoreInfo.forEach((key, value) async{
-          var lawyer =   LawyersObject.fromJson(value);
-      await lawyersList.add(lawyer);
+      lawyersList.clear();
+      Map<dynamic, dynamic> firestoreInfo = event.data();
+      firestoreInfo.forEach((key, value) async {
+        var lawyer = LawyersObject.fromJson(value);
+        lawyersList.add(lawyer);
       });
-print(lawyersList[0].LawyerAge);
-setState(() {
+      print(lawyersList[0].LawyerAge);
+      });
+    var snapshot = await FirebaseFirestore.instance
+        .collection('lawyers')
+        .doc("family_law")
+        .collection("1")
+        .get();
+    Map map = Map<String, dynamic>();
+    for (int i = 0; i < snapshot.docs.length; i++) {
+      map["$i"] = snapshot.docs[i].data();
+    }
 
-});
-    });
-
-
-  }
-@override
+    return map;
+  }*/
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getUserData();
-    if(lawyersList.isEmpty){
-      print("list empty");
-    }
+
+    getTest();
   }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -104,35 +134,69 @@ setState(() {
                   )
                 ],
               )),
-          ElevatedButton(onPressed: (){
+          DividerBox(size: size, height: 0.1),
+          Expanded(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xffEAEDEF),
+                    ),
+                    child: GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: (2),
+                          crossAxisSpacing: 5,
+                          mainAxisSpacing: 5),
+                      itemCount:test.length,
+                      itemBuilder: (context, index) {
+                        return LawyersLabels(
+                          footer: "${test["$index"]["name"]}",
 
-            },
-              child:Text("test") ),
-          Text("${lawyersList[0].LawyerName}")
-        /*  Expanded(
-            child: FutureBuilder(
-                future: getUserData(),
-                builder: (context,AsyncSnapshot snapshot){
-              if(snapshot.hasData){
-                return ListView.builder(
-                    itemCount:1,
-                    itemBuilder: (context,index){
-                  return Column(
-                    children: [
-                      Text("${snapshot.data['name']}"),
+                          image:
+                              'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
+                        );
+                      },
+                    ),
+                  ),
+                )
+              ],
+            ),
+            /* child: FutureBuilder(
+                future: getTest(),
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    return  Column(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color:  Color(0xffEAEDEF),
 
-                    ],
-                  );
+                            ),
+                            child: GridView.builder(
 
-                });
-              }else return CircularProgressIndicator();
-            }),
-          ),*/
-
-         /* GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: (2), crossAxisSpacing: 5, mainAxisSpacing: 5),
-          ),*/
+                              gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: (2),
+                                  crossAxisSpacing: 5,
+                                  mainAxisSpacing: 5),
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (context,index){
+                                return LawyersLabels(
+                                  footer:"${snapshot.data['$index']['name']}",
+                                  image: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
+                                );
+                              },
+                            ),
+                          ),
+                        )
+                      ],
+                    );
+                  } else
+                    return Center(child: CircularProgressIndicator());
+                }),*/
+          ),
         ],
       )),
     );
