@@ -1,13 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class buildHomePage extends StatefulWidget {
   final bool connected;
+  final String userName;
   final Function press;
 
   const buildHomePage({
 
-this.connected, this.press});
+this.connected, this.press, this.userName});
 
   @override
 
@@ -15,7 +18,8 @@ this.connected, this.press});
 }
 
 class _buildHomePageState extends State<buildHomePage> {
-String userEmail;
+String userName="";
+String userRole="";
   List<Content> contentList = [
     Content(image: 'assets/images/family-room.png', footer: 'Droit de la famille'),
     Content(image: 'assets/images/home.png', footer: 'Loi de properiété'),
@@ -25,7 +29,7 @@ String userEmail;
     Content(image: 'assets/images/employement.png', footer: 'Droit de travaille'),
   ];
 
-  Future<void> getUserData()async{
+/*  Future<void> getUserData()async{
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = auth.currentUser;
     final uid = user.email;
@@ -34,12 +38,24 @@ String userEmail;
     userEmail=uid;
 
   });
+  }*/
+
+  Future<void> getUserData()async{
+    final FirebaseAuth auth = await FirebaseAuth.instance;
+    final User user = await auth.currentUser;
+    final uid = user.uid;
+    var snapshotName = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+setState(() {
+  userName =snapshotName["nom"];
+  userRole =snapshotName["role"];
+});
+
   }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-getUserData();
+    getUserData();
   }
   @override
 
@@ -77,11 +93,23 @@ getUserData();
                 Expanded(
                   child: Container(
                     alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Bienvenue $userEmail.",
-                      style: TextStyle(
-                          fontSize: size.height * 0.035, fontFamily: "EBGaramond"),
+                   /* child:FutureBuilder(
+                      future: insertUserFireStore(),
+                      builder: (context,snapshot){
+
+                      },
+                    ),*/
+
+                     child:Row(
+                       children: [
+
+                         Text(
+                          "Bienvenue $userName.",
+                          style: TextStyle(
+                              fontSize: size.height * 0.035, fontFamily: "EBGaramond"),
                     ),
+                       ],
+                     ),
                   ),
                 ),
               ],

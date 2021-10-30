@@ -8,7 +8,7 @@ import 'package:hire_lawyer/HomePage/HomePage.dart';
 
 import 'package:hire_lawyer/Values/Strings.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Login/ActionButton.dart';
 import '../Login/DividerBox.dart';
 import '../Login/FormFieldPassword.dart';
@@ -31,11 +31,18 @@ class _CreateAccountState extends State<CreateAccount> {
   Widget SuffixPassword=Icon(Icons.visibility);
   bool obscureText=true;
   File _image;
+Future<void> insertUserFireStore()async{
+  final FirebaseAuth auth = await FirebaseAuth.instance;
+  final User user = auth.currentUser;
+  final uid = user.uid;
+  var snapshot = await FirebaseFirestore.instance
+      .collection('users').doc(uid).set({"email":user.email,"nom":usernameController.text,"role":"User"});
 
+}
   Future<void> SignUp() async{
    try{
      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text);
-print("test");
+     insertUserFireStore();
 
    }catch(e){
      print("error here ${e.message}");
