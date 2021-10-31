@@ -13,6 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'infoMessage.dart';
 import 'nameFormField.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 class CreateAccount extends StatefulWidget {
 
 
@@ -26,7 +27,9 @@ class _CreateAccountState extends State<CreateAccount> {
   TextEditingController usernameController=TextEditingController();
   Widget SuffixPassword=Icon(Icons.visibility);
   bool obscureText=true;
+  bool loading =false;
   File _image;
+  bool hasConnection=false;
 Future<void> insertUserFireStore()async{
   final FirebaseAuth auth = await FirebaseAuth.instance;
   final User user = auth.currentUser;
@@ -41,7 +44,9 @@ Future<void> insertUserFireStore()async{
      insertUserFireStore();
 
    }catch(e){
-     print("error here ${e.message}");
+    if(hasConnection==false){
+      print("error here ${e.message}");
+    }
    }
   }
   Future getProfileImage()async{
@@ -67,16 +72,36 @@ Future<void> insertUserFireStore()async{
     }
     return result;
   }
-  registerUserVerification(BuildContext context){
+  registerUserVerification(BuildContext context) async {
+
+    setState(() {
+      loading=true;
+    });
     String str=verifyInput();
+    hasConnection=await InternetConnectionChecker().hasConnection;
     if (str.isNotEmpty) {
       InfoMessage(message: str,press:() {
         Navigator.pop(context);
+
+        setState(() {
+          loading=!loading;
+        });
       },).show(context);
-    }else {
+    }else if(hasConnection==true) {
       SignUp();
        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HomePage()));
-    }
+       setState(() {
+         loading=true;
+       });
+    }else return  InfoMessage(
+      message:"Verfiez votre connexion internet",
+      press: () {
+        setState(() {
+          loading=false;
+        });
+        Navigator.pop(context);
+      },
+    ).show(context);
   }
   @override
   Widget build(BuildContext context) {
@@ -158,10 +183,10 @@ Future<void> insertUserFireStore()async{
                   });
                 },
               ),),
-              BuildLoginButton(size,ConstStrings.CreateAccount,(){
+              !loading?BuildLoginButton(size,ConstStrings.CreateAccount,(){
 
                 registerUserVerification(context);
-              }),
+              }):CircularProgressIndicator.adaptive(),
               Container(
                 padding:  EdgeInsets.only(top:200, bottom: 10),
                 decoration: BoxDecoration(

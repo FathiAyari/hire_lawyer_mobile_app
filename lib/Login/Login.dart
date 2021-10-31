@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hire_lawyer/HomePage/HomePage.dart';
-import 'package:hire_lawyer/Register/infoMessage.dart';
+import 'package:hire_lawyer/ClientsModules/HomePage/HomePage.dart';
+import 'package:hire_lawyer/ClientsModules/Register/CreateAccount.dart';
+import 'package:hire_lawyer/ClientsModules/Register/infoMessage.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import '../Register/CreateAccount.dart';
+import '../LawyersModules/LawyerHomePage.dart';
 import '../ForgotPassword/ForgotPassword.dart';
 import '../Values/Strings.dart';
 import 'ActionButton.dart';
@@ -11,7 +12,7 @@ import 'DividerBox.dart';
 import 'FormFieldPassword.dart';
 import 'emailFormField.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -37,7 +38,8 @@ class _LoginState extends State<Login> {
   }
 
   loginerUserVerif(BuildContext context) {
-    String str = verifyInput();
+    SignIn();
+  /*  String str = verifyInput();
     if (str.isNotEmpty) {
       InfoMessage(
         message: str,
@@ -46,7 +48,7 @@ class _LoginState extends State<Login> {
         },
       ).show(context);
     } else
-      SignIn();
+      SignIn();*/
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -143,8 +145,7 @@ class _LoginState extends State<Login> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => CreateAccount()));
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => CreateAccount()));
+
                   },
                   child: Text(
                     "Créer un compte ",
@@ -158,30 +159,21 @@ class _LoginState extends State<Login> {
       ),
     );
   }
-  void showcustomSnackBar(BuildContext context,String content) {
-    final snackbar = SnackBar(
-      content: Text('$content'),
-      backgroundColor: Colors.green,
-      shape: StadiumBorder(),
-      elevation: 0,
-      duration: Duration(seconds: 1),
-    );
-    ScaffoldMessenger.of(context)
-      ..removeCurrentSnackBar()
-      ..showSnackBar(snackbar);
-    setState(() {
-      loading=false;
-    });
-  }
+
   Future<void> SignIn() async {
    try{ Future.delayed(Duration(milliseconds: 100), () {
      setState(() {
        loading=true;
      });
    });
-     await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text);
 
-     Navigator.push(context,MaterialPageRoute(builder: (context)=>HomePage()));
+     await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password:passwordController.text);
+   final FirebaseAuth auth = await FirebaseAuth.instance;
+   final User user = await auth.currentUser;
+   final uid = user.uid;
+   var snapshotName = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+     Navigator.push(context,MaterialPageRoute(builder: (context)=>snapshotName["role"]=="Admin"?HomePageLawyer():HomePage()));
    }catch(e) {
      hasConnection=await InternetConnectionChecker().hasConnection;
      if(hasConnection==false){
