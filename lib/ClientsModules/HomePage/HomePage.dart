@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,11 +17,32 @@ class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
   bool connected=true;
   String user;
+  Widget Positive() {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.blueAccent
+      ),
+      child: TextButton(
+          onPressed: () {
+            exit(0);
+          },
+          child: Text(" Oui",
+            style: TextStyle(
+              color:Color(0xffEAEDEF),
+            ),)),
+    );
+  }
+  Widget Negative(BuildContext context) {
+    return TextButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: Text(" Non"));
+  }
   List <Widget>items=[
      Icon(Icons.home_outlined),
      Icon(Icons.email_outlined),
      Icon(Icons.account_circle_outlined)
-
   ];
 
   @override
@@ -39,13 +62,25 @@ class _HomePageState extends State<HomePage> {
     ];
     return Scaffold(
 
-      body: SafeArea(
+      body: WillPopScope(
+        onWillPop: () {
+          return showDialog(
+              context: context,
+              builder: (context) {
+                return CupertinoAlertDialog(
+                  content: Text(" êtes-vous sûr de sortir ?"),
+                  actions: [Negative(context), Positive()],
+                );
+              });
+        },
+        child: SafeArea(
 
-        child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(bottomRight:  Radius.circular(40),bottomLeft:  Radius.circular(40),)
-            ),
-          child: pages[currentIndex],
+          child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(bottomRight:  Radius.circular(40),bottomLeft:  Radius.circular(40),)
+              ),
+            child: pages[currentIndex],
+          ),
         ),
       ),
       bottomNavigationBar: CurvedNavigationBar(
