@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
-
 import 'package:hire_lawyer/splashScreen/splash_screen.dart';
 
 
-import 'Lawyers/Lawyers.dart';
+
+
 int isViewed;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,9 +42,7 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      routes: {
-        '/lawyers': (context) => Lawyers(),
-      },
+
       home: Scaffold(
 
         body: SplasScreen(),

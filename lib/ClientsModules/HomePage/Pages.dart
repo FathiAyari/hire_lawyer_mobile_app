@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hire_lawyer/Lawyers/Lawyers.dart';
+import 'package:hire_lawyer/ClientsModules/LawyersView/Lawyers.dart';
+
 
 class buildHomePage extends StatefulWidget {
   final bool connected;

@@ -1,19 +1,15 @@
-
-
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hire_lawyer/HomePage/HomePage.dart';
-
+import 'package:hire_lawyer/ClientsModules/HomePage/HomePage.dart';
+import 'package:hire_lawyer/Login/ActionButton.dart';
+import 'package:hire_lawyer/Login/DividerBox.dart';
+import 'package:hire_lawyer/Login/FormFieldPassword.dart';
+import 'package:hire_lawyer/Login/Login.dart';
+import 'package:hire_lawyer/Login/emailFormField.dart';
 import 'package:hire_lawyer/Values/Strings.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../Login/ActionButton.dart';
-import '../Login/DividerBox.dart';
-import '../Login/FormFieldPassword.dart';
-import '../Login/Login.dart';
-import '../Login/emailFormField.dart';
 import 'infoMessage.dart';
 import 'nameFormField.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -35,7 +31,7 @@ Future<void> insertUserFireStore()async{
   final FirebaseAuth auth = await FirebaseAuth.instance;
   final User user = auth.currentUser;
   final uid = user.uid;
-  var snapshot = await FirebaseFirestore.instance
+ await FirebaseFirestore.instance
       .collection('users').doc(uid).set({"email":user.email,"nom":usernameController.text,"role":"User"});
 
 }

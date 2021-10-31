@@ -1,14 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hire_lawyer/HomePage/HomePage.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hire_lawyer/HomePage/Pages.dart';
+import 'package:hire_lawyer/ClientsModules/HomePage/HomePage.dart';
 import 'package:hire_lawyer/Login/DividerBox.dart';
 import 'package:firebase_database/firebase_database.dart';
-import '../Values/Strings.dart';
 import 'LawyersLabels.dart';
-import 'lawyerObject.dart';
+
 
 class Lawyers extends StatefulWidget {
   final String footer;

@@ -1,41 +1,35 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'LawyerPersonalProfile.dart';
+import 'lawyerMessages.dart';
 
 
-import '../Messages.dart';
-import '../ProfileClient.dart';
-import 'Pages.dart';
-
-class HomePage extends StatefulWidget {
+class HomePageLawyer extends StatefulWidget {
   @override
 
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePageLawyer> {
   int currentIndex = 0;
   bool connected=true;
   String user;
   List <Widget>items=[
-     Icon(Icons.home_outlined),
-     Icon(Icons.email_outlined),
-     Icon(Icons.account_circle_outlined)
+
+    Icon(Icons.email_outlined),
+    Icon(Icons.account_circle_outlined)
 
   ];
 
   @override
 
   Widget build(BuildContext context) {
-    Size size =MediaQuery.of(context).size;
+
     List pages=[
-      buildHomePage(connected:connected,press:(){
-      setState(() {
-        this.connected=!connected;
-      });
-    }),
-      buildMessages(context),
-      buildProfile(context),
+
+      buildMessagesLawyer(context),
+      LawyerPersonalProfile(),
 
 
     ];
@@ -44,9 +38,9 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
 
         child: Container(
-            decoration: BoxDecoration(
+          decoration: BoxDecoration(
               borderRadius: BorderRadius.only(bottomRight:  Radius.circular(40),bottomLeft:  Radius.circular(40),)
-            ),
+          ),
           child: pages[currentIndex],
         ),
       ),
