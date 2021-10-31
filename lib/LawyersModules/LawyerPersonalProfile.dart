@@ -6,6 +6,7 @@ import 'package:hire_lawyer/Login/DividerBox.dart';
 import 'package:hire_lawyer/Login/Login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hire_lawyer/Login/LoginFinal.dart';
 import 'package:hire_lawyer/Values/Strings.dart';
 class LawyerPersonalProfile extends StatefulWidget {
 

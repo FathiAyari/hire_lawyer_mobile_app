@@ -6,6 +6,7 @@ import 'package:hire_lawyer/Login/ActionButton.dart';
 import 'package:hire_lawyer/Login/DividerBox.dart';
 import 'package:hire_lawyer/Login/FormFieldPassword.dart';
 import 'package:hire_lawyer/Login/Login.dart';
+import 'package:hire_lawyer/Login/LoginFinal.dart';
 import 'package:hire_lawyer/Login/emailFormField.dart';
 import 'package:hire_lawyer/Values/Strings.dart';
 import 'package:image_picker/image_picker.dart';

@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'package:hire_lawyer/Real_time_internet_connection_check/Connectivity_provider.dart';
+import 'package:hire_lawyer/Real_time_internet_connection_check/NoInternetConnection.dart';
+
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,8 +30,9 @@ class _SplasScreenState extends State<SplasScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     getViewed();
-    Timer(Duration(seconds: 2), ()=>Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> isViewed!=0? Onboarding():Login())));
+    Timer(Duration(seconds: 2), ()=>Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> isViewed!=0? Onboarding():LoginTest())));
   }
   @override
   Widget build(BuildContext context) {
@@ -66,4 +70,5 @@ class _SplasScreenState extends State<SplasScreen> {
         )
     );
   }
+
 }
