@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hire_lawyer/Lawyers/Lawyers.dart';
 
 class buildHomePage extends StatefulWidget {
   final bool connected;
@@ -148,7 +149,8 @@ class Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, '/lawyers', arguments: {"footer": footer});
+      Navigator.of(context).push( MaterialPageRoute(builder: (context)=>Lawyers(footer: footer,)));
+
       },
       child: Container(
         clipBehavior: Clip.antiAliasWithSaveLayer,

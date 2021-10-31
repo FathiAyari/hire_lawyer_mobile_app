@@ -11,7 +11,8 @@ import 'LawyersLabels.dart';
 import 'lawyerObject.dart';
 
 class Lawyers extends StatefulWidget {
-/*  const Lawyers({Key? key}) : super(key: key);*/
+  final String footer;
+  const Lawyers({this.footer});
 
   @override
   _LawyersState createState() => _LawyersState();
@@ -23,7 +24,7 @@ class _LawyersState extends State<Lawyers> {
   Map test={};
   getTest() {
     var mediaReference =
-        FirebaseDatabase.instance.reference().child("family_law");
+        FirebaseDatabase.instance.reference().child("${widget.footer}");
     mediaReference.onValue.listen((event) {
       lawyersList.clear();
       test.clear();
@@ -33,7 +34,7 @@ class _LawyersState extends State<Lawyers> {
       }
       lawyersList.add(map);
       test=map;
-      print(test);
+
       setState(() {
 
       });
@@ -41,7 +42,7 @@ class _LawyersState extends State<Lawyers> {
 
   }
 
-  /*Future<void> getUserData() async {
+/*  Future<void> getUserData() async {
     final FirebaseAuth auth = await FirebaseAuth.instance;
     final User user = await auth.currentUser;
     final uid = user.uid;
@@ -85,29 +86,6 @@ class _LawyersState extends State<Lawyers> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    Map arguments = ModalRoute.of(context).settings.arguments;
-    String footer = arguments['footer'];
-    int verifIndex;
-    switch (footer) {
-      case 'Droit de la famille':
-        verifIndex = 0;
-        break;
-      case 'Loi de properiété':
-        verifIndex = 1;
-        break;
-      case 'Loi criminele':
-        verifIndex = 2;
-        break;
-      case 'Infractiosn de la circulation':
-        verifIndex = 3;
-        break;
-      case 'Blessurre personelle':
-        verifIndex = 4;
-        break;
-      case 'Droit de travaille':
-        verifIndex = 5;
-        break;
-    }
     return Scaffold(
       body: SafeArea(
           child: Column(
@@ -126,7 +104,7 @@ class _LawyersState extends State<Lawyers> {
                     width: size.width * 0.15,
                   ),
                   Text(
-                    " $footer",
+                    " ${widget.footer}",
                     style: TextStyle(
                         fontSize: size.height * 0.028,
                         fontFamily: "NewsCycle-Bold"),
