@@ -10,7 +10,26 @@ class NoInternetConnection extends StatefulWidget {
 class _NoInternetConnectionState extends State<NoInternetConnection> {
   @override
   Widget build(BuildContext context) {
-    return Center(child: Container(child: Text("no internet connection")
-      ,));
+    Size size = MediaQuery.of(context).size;
+    return Container(
+        child:Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+
+            Expanded(
+                flex: 2,
+                child: Image.asset('assets/images/no-connection.jpg')),
+            Expanded(child: Image.asset('assets/images/alert.png')),
+            Expanded(
+              child: Center(child: Text("Pas de connexion internet veuillez la vérifier pour continuer.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'EBGaramond',
+                fontSize: size.height * 0.03
+              ),)),
+            )
+          ],
+        )
+      ,);
   }
 }

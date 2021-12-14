@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:hire_lawyer/ClientsModules/HomePage/HomePage.dart';
 import 'package:hire_lawyer/Login/DividerBox.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:hire_lawyer/Messages/Messenger.dart';
+import 'package:hire_lawyer/Models/Users.dart';
 import 'LawyersLabels.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Lawyers extends StatefulWidget {
   final String footer;
@@ -15,10 +18,24 @@ class Lawyers extends StatefulWidget {
 }
 
 class _LawyersState extends State<Lawyers> {
-
   List lawyersList = [""];
-  Map test={};
+  Map test = {};
+
+  String getIndex(){
+    String index;
+    switch(widget.footer){
+      case "Droit de la famille":index="family_law";break;
+      case "Loi de properiété":index="orperty_law";break;
+      case "Loi criminele":index="criminal_law";break;
+      case "Infractiosn de la circulation":index="infraction_law";break;
+      case "Blessurre personelle":index="personal_injury";break;
+      case "Droit de travaille":index="labour_law";break;
+
+    }
+    return index;
+  }
   getTest() {
+
     var mediaReference =
         FirebaseDatabase.instance.reference().child("${widget.footer}");
     mediaReference.onValue.listen((event) {
@@ -29,20 +46,17 @@ class _LawyersState extends State<Lawyers> {
         map["$i"] = event.snapshot.value[i];
       }
       lawyersList.add(map);
-      test=map;
+      test = map;
 
-      setState(() {
-
-      });
+      setState(() {});
     });
-
   }
 
-/*  Future<void> getUserData() async {
+  Future<void> getUserData() async {
     final FirebaseAuth auth = await FirebaseAuth.instance;
     final User user = await auth.currentUser;
     final uid = user.uid;
-
+/*
     var snapshotNametest = await FirebaseFirestore
         .instance
         .collection('lawyers')
@@ -53,29 +67,31 @@ class _LawyersState extends State<Lawyers> {
         .listen((event) {
       lawyersList.clear();
       Map<dynamic, dynamic> firestoreInfo = event.data();
+
       firestoreInfo.forEach((key, value) async {
-        var lawyer = LawyersObject.fromJson(value);
+        var lawyer = Cusers.fromJson(value);
         lawyersList.add(lawyer);
       });
-      print(lawyersList[0].LawyerAge);
-      });
+
+      });*/
     var snapshot = await FirebaseFirestore.instance
         .collection('lawyers')
-        .doc("family_law")
+        .doc(getIndex())
         .collection("1")
         .get();
     Map map = Map<String, dynamic>();
     for (int i = 0; i < snapshot.docs.length; i++) {
       map["$i"] = snapshot.docs[i].data();
     }
-
+    print(map);
     return map;
-  }*/
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    getUserData();
     getTest();
   }
 
@@ -108,71 +124,155 @@ class _LawyersState extends State<Lawyers> {
                   )
                 ],
               )),
-          DividerBox(size: size, height: 0.1),
+          DividerBox(size: size, height: 0.05),
           Expanded(
             child: Column(
               children: [
                 Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xffEAEDEF),
-                    ),
-                    child: GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: (2),
-                          crossAxisSpacing: 5,
-                          mainAxisSpacing: 5),
-                      itemCount:test.length,
-                      itemBuilder: (context, index) {
-                        return LawyersLabels(
-                          footer: "${test["$index"]["name"]}",
+                  child: FutureBuilder(
+                      future: getUserData(),
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (context, index) {
+                                return Column(
+                                  children: [
+                                    SizedBox(
+                                      height: size.height * 0.05,
+                                    ),
+                                    Container(
+                                      height: size.height * 0.22,
+                                      width: size.width * 0.8,
+                                      child: Stack(
+                                        children: [
+                                          InkWell(
+                                            onTap: () async{
+                                            await   Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>Messenger(label:"${snapshot.data['$index']['name']} ${snapshot.data['$index']['lastname']} "
+                                                ,email:"${snapshot.data['$index']['email']}")));
+                                            },
+                                            child: Container(
+                                              child: Card(
+                                                shape: RoundedRectangleBorder(
+                                                  side: BorderSide(
+                                                      color: Colors.white70,
+                                                      width: 1),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                elevation: 3,
+                                                child: Container(
+                                                  child: Container(
+                                                    margin: EdgeInsets.only(top: 15,left: 40),
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Row(
 
-                          image:
-                              'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
-                        );
-                      },
-                    ),
-                  ),
-                )
+                                                          children: [
+                                                            Container(
+                                                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                              decoration:BoxDecoration(
+                                                                borderRadius: BorderRadius.circular(20)
+                                                              ),
+                                                              child: Image.network(
+                                                                'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
+                                                                fit: BoxFit.fill,
+                                                                height: size.height * 0.1,
+                                                                width: 100,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: size.width * 0.05,
+                                                            ),
+                                                            Expanded(
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                                children: [
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                        "${snapshot.data['$index']['name']} ${snapshot.data['$index']['lastname']} ",
+                                                                    style: TextStyle(
+                                                                      fontSize: size.height * 0.02,
+                                                                      fontFamily: "EBGaramond"
+                                                                    ),),
+                                                                  ),
+
+                                                                  Container(
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Text('10'),
+                                                                        Icon(
+                                                                          Icons
+                                                                              .star_rate_sharp,
+                                                                          color: Colors
+                                                                              .amber,
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+
+                                                        ),
+
+                                                        SizedBox(
+                                                          height: size.height * 0.01,
+                                                        ),
+                                                        Text('Lorem Ipsum is simply dummy text of the printing and typesetting industry.'),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Transform.translate(
+                                            offset: Offset(-15, 20),
+                                            child: Container(
+                                              child: Center(
+                                                child: Text(
+                                                  "${index + 1}",
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                              height: 60,
+                                              width: 40,
+                                              decoration: BoxDecoration(
+                                                  color: Color(0xff8E9FFC)
+                                                      .withOpacity(0.9),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+
+                                  ],
+                                );
+                              });
+                        } else
+                          return Center(child: CircularProgressIndicator());
+                      }),
+                ),
               ],
             ),
-            /* child: FutureBuilder(
-                future: getTest(),
-                builder: (context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData) {
-                    return  Column(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color:  Color(0xffEAEDEF),
-
-                            ),
-                            child: GridView.builder(
-
-                              gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: (2),
-                                  crossAxisSpacing: 5,
-                                  mainAxisSpacing: 5),
-                              itemCount: snapshot.data.length,
-                              itemBuilder: (context,index){
-                                return LawyersLabels(
-                                  footer:"${snapshot.data['$index']['name']}",
-                                  image: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
-                                );
-                              },
-                            ),
-                          ),
-                        )
-                      ],
-                    );
-                  } else
-                    return Center(child: CircularProgressIndicator());
-                }),*/
           ),
         ],
       )),
     );
   }
 }
+/*return LawyersLabels(
+                                    footer:"${snapshot.data['$index']['name']} ${snapshot.data['$index']['lastname']} ",
+                                    image: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
+                                  );*/
+
+/*  color:  Color(0xffEAEDEF),*/

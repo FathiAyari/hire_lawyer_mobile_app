@@ -6,6 +6,8 @@ import 'package:hire_lawyer/ClientsModules/Register/CreateAccount.dart';
 import 'package:hire_lawyer/ClientsModules/Register/infoMessage.dart';
 import 'package:hire_lawyer/Real_time_internet_connection_check/Connectivity_provider.dart';
 import 'package:hire_lawyer/Real_time_internet_connection_check/NoInternetConnection.dart';
+import 'package:hire_lawyer/Services/AuthServices.dart';
+import 'package:hire_lawyer/Services/DbServices.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import '../LawyersModules/LawyerHomePage.dart';
 import '../ForgotPassword/ForgotPassword.dart';
@@ -61,26 +63,59 @@ class _LoginState extends State<Login> {
     }
     return result;
   }
-  loginerUserVerif(BuildContext context) {
-    SignIn();
-    /*  String str = verifyInput();
+  loginerUserVerif(BuildContext context) async {
+setState(() {
+  loading=true;
+});
+    bool check;
+      String str = verifyInput();
     if (str.isNotEmpty) {
       InfoMessage(
         message: str,
         press: () {
           Navigator.pop(context);
+          setState(() {
+            loading=false;
+          });
         },
       ).show(context);
-    } else
-      SignIn();*/
-  }
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
+    } else{
+      try{
+        check= await AuthServices().signIn(emailController.text,passwordController.text);
+        final FirebaseAuth auth = await FirebaseAuth.instance;
+        final User user = await auth.currentUser;
+        final uid = user.uid;
+        var snapshotName =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+        if(check){
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => snapshotName["role"] == "Admin"
+                      ? HomePageLawyer()
+                      : HomePage()));
+        }
+      } catch (e){
+        setState(() {
+          loading=false;
+        });
+        return InfoMessage(
+          message:"Verfiez votre connexion internet",
+          press: () {
+            setState(() {
+              loading=false;
+            });
+            Navigator.pop(context);
+          },
+        ).show(context);
+      }
+    }
+
 
   }
-  final _formKey = GlobalKey<FormState>();
+  @override
+
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -122,13 +157,10 @@ class _LoginState extends State<Login> {
                       size: size,
                       height: 0.08,
                     ),
-                    Form(
-                      child: emailFormField(
-                        size: size,
-                        controller: emailController,
-                        prefixIcon: Icons.email_outlined,
-                      ),
-                      key: _formKey,
+                    emailFormField(
+                      size: size,
+                      controller: emailController,
+                      prefixIcon: Icons.email_outlined,
                     ),
                     FormFieldPassword(
                       size: size,
@@ -173,8 +205,10 @@ class _LoginState extends State<Login> {
                   loginerUserVerif(context);
                 })
                     : CircularProgressIndicator.adaptive(),
+                SizedBox(
+                  height: size.height * 0.25,
+                ),
                 Container(
-                  padding: EdgeInsets.only(top: 200, bottom: 10),
                   decoration: BoxDecoration(
                       border: Border(
                           bottom: BorderSide(
@@ -202,58 +236,5 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Future<void> SignIn() async {
-    try {
-      Future.delayed(Duration(milliseconds: 100), () {
-        setState(() {
-          loading = true;
-        });
-      });
 
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
-      final FirebaseAuth auth = await FirebaseAuth.instance;
-      final User user = await auth.currentUser;
-      final uid = user.uid;
-      var snapshotName =
-      await FirebaseFirestore.instance.collection('users').doc(uid).get();
-
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => snapshotName["role"] == "Admin"
-                  ? HomePageLawyer()
-                  : HomePage()));
-    } catch (e) {
-      hasConnection = await InternetConnectionChecker().hasConnection;
-      if (hasConnection == false) {
-        setState(() {
-          loading = !loading;
-        });
-
-        return InfoMessage(
-          message: "Verfiez votre connexion internet ",
-          press: () {
-            setState(() {
-              loading = !loading;
-            });
-            Navigator.pop(context);
-          },
-        ).show(context);
-      } else {
-        setState(() {
-          loading = !loading;
-        });
-        return InfoMessage(
-          message: "Votre email ou bien mot de passe est incorrect",
-          press: () {
-            setState(() {
-              loading = false;
-            });
-            Navigator.pop(context);
-          },
-        ).show(context);
-      }
-    }
-  }
 }

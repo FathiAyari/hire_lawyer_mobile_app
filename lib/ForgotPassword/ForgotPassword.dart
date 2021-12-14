@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hire_lawyer/Login/Login.dart';
 import 'package:hire_lawyer/Login/LoginFinal.dart';
+import 'package:hire_lawyer/Services/AuthServices.dart';
 
 import '../Login/ActionButton.dart';
 import '../Login/emailFormField.dart';
@@ -15,7 +16,20 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
-  TextEditingController email =TextEditingController();
+  bool check;
+  void showcustomSnackBar(BuildContext context) {
+    final snackbar = SnackBar(
+      content: Text('Conusltez votre courrier électronique'),
+      backgroundColor: Colors.green,
+      shape: StadiumBorder(),
+      elevation: 0,
+      duration: Duration(seconds: 2),
+    );
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(snackbar);
+  }
+  TextEditingController emailController =TextEditingController();
   @override
   Widget build(BuildContext context) {
     Size size =MediaQuery.of(context).size;
@@ -68,9 +82,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                  ),),
                ),
              ),
-             emailFormField(size: size, controller: email,prefixIcon: Icons.email_outlined,),
-             BuildLoginButton(size,ConstStrings.Reset,(){
-               print("hello");
+             emailFormField(size: size, controller: emailController,prefixIcon: Icons.email_outlined,),
+             BuildLoginButton(size,ConstStrings.Reset,()async{
+               check=await AuthServices().resetPassword(emailController.text);
+              if(check){
+                showcustomSnackBar(context);
+              }
              }),
 
            ],

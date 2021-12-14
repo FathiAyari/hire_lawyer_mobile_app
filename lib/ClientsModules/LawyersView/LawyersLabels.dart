@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../Messages/Messenger.dart';
+
 class LawyersLabels extends StatelessWidget {
   final String image;
   final String footer;
@@ -14,7 +16,7 @@ class LawyersLabels extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-
+      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>Messenger(label:"$footer")));
       },
       child: Container(
         clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -27,9 +29,14 @@ class LawyersLabels extends StatelessWidget {
           children: [
             Expanded(
                 flex: 2,
-                child: Image.network(
-                  image,
-                  fit: BoxFit.fill,
+                child:Container(
+
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage: NetworkImage(
+                      "https://user.oc-static.com/files/6001_7000/6410.jpg",
+                    ),
+                  ),
                 )),
             Expanded(
               child: Container(

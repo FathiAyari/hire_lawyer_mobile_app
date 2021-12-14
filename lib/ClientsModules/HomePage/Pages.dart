@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -48,8 +49,8 @@ String userRole="";
     final uid = user.uid;
     var snapshotName = await FirebaseFirestore.instance.collection('users').doc(uid).get();
 setState(() {
-  userName =snapshotName["nom"];
-  userRole =snapshotName["role"];
+  userName =snapshotName["name"];
+
 });
 
   }
@@ -116,13 +117,42 @@ setState(() {
                 ),
               ],
             ),
+            Container(
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              height: 200,
+              width: size.width * 0.9,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+
+              ),
+              child: Carousel(
+                boxFit: BoxFit.cover,
+                autoplay: true,
+                autoplayDuration: Duration(seconds: 3),
+                animationCurve: Curves.fastOutSlowIn,
+                animationDuration: Duration(seconds: 1),
+                dotSize: 5.0,
+                dotIncreasedColor: Colors.blueAccent,
+                dotBgColor: Colors.transparent,
+                dotPosition: DotPosition.bottomCenter,
+                dotVerticalPadding: 10.0,
+                showIndicator: true,
+                indicatorBgPadding: 7.0,
+                images: [
+
+                  Image.asset('assets/images/texting.png'),
+                  Image.asset('assets/images/answer.png'),
+
+                ],
+              ),
+            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: GridView.builder(
                   itemCount: contentList.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: (2), crossAxisSpacing: 15, mainAxisSpacing: 15),
+                      crossAxisCount: (3), crossAxisSpacing: 15, mainAxisSpacing: 15),
                   itemBuilder: (context, int index) {
                     return contentList[index];
                   },

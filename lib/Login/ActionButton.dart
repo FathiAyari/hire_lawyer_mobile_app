@@ -11,12 +11,21 @@ Padding BuildLoginButton(Size size , String label,Function press) {
       width: double.infinity,
       child: ElevatedButton(onPressed: press, child: Text("$label"),
         style: ElevatedButton.styleFrom(
-          primary: Color(0xff848DFF),
+            primary: Color(0xff848DFF),
             shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        )
+              borderRadius: BorderRadius.circular(10),
+            )
         ),
       ),
     ),
   );
 }
+
+
+/*ButtonStyle(
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10)
+            )
+          )
+        )*/

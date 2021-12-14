@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hire_lawyer/Login/DividerBox.dart';
-import 'ClientsModules/HomePage/HomePage.dart';
-import 'Values/Strings.dart';
+import '../ClientsModules/HomePage/HomePage.dart';
+import '../Values/Strings.dart';
 
 Widget buildMessages(BuildContext context) {
   Size size = MediaQuery.of(context).size;

@@ -8,6 +8,9 @@ import 'package:hire_lawyer/Login/FormFieldPassword.dart';
 import 'package:hire_lawyer/Login/Login.dart';
 import 'package:hire_lawyer/Login/LoginFinal.dart';
 import 'package:hire_lawyer/Login/emailFormField.dart';
+import 'package:hire_lawyer/Services/AuthServices.dart';
+import 'package:hire_lawyer/Services/DbServices.dart';
+import 'package:hire_lawyer/Services/StorageServices.dart';
 import 'package:hire_lawyer/Values/Strings.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,13 +26,17 @@ class CreateAccount extends StatefulWidget {
 }
 
 class _CreateAccountState extends State<CreateAccount> {
+  Storage storage=Storage();
   TextEditingController emailController=TextEditingController();
+  TextEditingController LastName=TextEditingController();
   TextEditingController passwordController=TextEditingController();
   TextEditingController usernameController=TextEditingController();
   Widget SuffixPassword=Icon(Icons.visibility);
   bool obscureText=true;
   bool loading =false;
   File _image;
+  bool check=false;
+  String extension="";
   bool hasConnection=false;
 Future<void> insertUserFireStore()async{
   final FirebaseAuth auth = await FirebaseAuth.instance;
@@ -57,26 +64,34 @@ Future<void> insertUserFireStore()async{
     final imageTemporary=File(image.path);
     setState(() {
       _image=imageTemporary;
+      check=true;
+      print(_image);
+
+
+
     });
   }
   String verifyInput() {
     String result ="";
     if(usernameController.text.isEmpty ){
-      result+="Veuillez verifier le nom de l'utilisateur";
+      result+="Veuillez verifier le Nom ";
+    }
+    else if(LastName.text.isEmpty){
+      result+= "Veuillez verifier le Prénom ";
     }
     else if(emailController.text.isEmpty || ! validateEmail(emailController.text)){
 
       result+="Veuillez verifier l'email";
     }
     else if(passwordController.text.isEmpty){
-      result+= "Veuillez verifier le mot de passe ";
+      result+= "Veuillez verifier Le mot de passe ";
     }
     return result;
   }
   registerUserVerification(BuildContext context) async {
 
     setState(() {
-      loading=true;
+      loading=false;
     });
     String str=verifyInput();
     hasConnection=await InternetConnectionChecker().hasConnection;
@@ -89,7 +104,17 @@ Future<void> insertUserFireStore()async{
         });
       },).show(context);
     }else if(hasConnection==true) {
-      SignUp();
+
+      storage.uploadImage("eeee","eeee");
+/*
+      String text="";
+      String img=_image.toString().split("/")[_image.toString().split("/").length-1];
+      for(int i=0;i<=img.length -2;i++){
+        text+=img[i];
+      }
+      print(text);
+      print("h");*/
+      AuthServices().signUp(emailController.text, passwordController.text, usernameController.text, LastName.text);
        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HomePage()));
        setState(() {
          loading=true;
@@ -108,7 +133,7 @@ Future<void> insertUserFireStore()async{
   Widget build(BuildContext context) {
     Size size =MediaQuery.of(context).size;
     return Scaffold(
-      resizeToAvoidBottomInset:false,
+
       body: SafeArea(
         child: Container(
           width: double.infinity,
@@ -145,68 +170,80 @@ Future<void> insertUserFireStore()async{
                   )
               ),
 
-              Stack(
-                alignment: AlignmentDirectional.bottomEnd,
+            Expanded(
+              child: SingleChildScrollView(child: Column(
                 children: [
+                  Stack(
+                    alignment: AlignmentDirectional.bottomEnd,
+                    children: [
 
-               CircleAvatar(
-                 backgroundColor: Colors.white38,
-                 radius: 80,
-                backgroundImage: _image==null? AssetImage('assets/images/user.png'):FileImage(_image) ,
-               ),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.only(bottom: 10,end: 2),
-                    child: CircleAvatar(
-                    backgroundColor:Colors.transparent,
-                      child:IconButton(
-                        onPressed: (){
-                          getProfileImage();
-                        },
-                          icon:Icon(Icons.add_photo_alternate_sharp,
-                            color: Colors.blueAccent,
-                            size: 40,)
+                      CircleAvatar(
+                        backgroundColor: Colors.white38,
+                        radius: 80,
+                        backgroundImage: _image==null? AssetImage('assets/images/user.png'):FileImage(_image) ,
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(bottom: 10,end: 2),
+                        child: CircleAvatar(
+                          backgroundColor:Colors.transparent,
+                          child:IconButton(
+                              onPressed: (){
+                                getProfileImage();
+                              },
+                              icon:Icon(Icons.add_photo_alternate_sharp,
+                                color: Colors.blueAccent,
+                                size: size.height * 0.05,)
+                          ),
+                        ),
+                      ),
+
+                    ],
                   ),
+                  DividerBox(size: size,height: 0.02,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 60),
+
+                        child:check==false? Row(
+                          children: [
+                            Text("Image pas encore selectionnée"),
+
+                            Icon(Icons.dangerous_outlined,color: Colors.red,)
+                          ],
+                        ): Row(
+                          children: [
+                            Text("Image bien selectionnée"),
+
+                            Icon(Icons.done_all,color: Colors.green,)
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  DividerBox(size: size,height: 0.02,),
+                  nameFormField(size: size, controller: usernameController,preixIcon: Icons.account_circle_sharp,hintText: "Nom",),
+                  nameFormField(size: size, controller: LastName,preixIcon: Icons.account_circle_sharp,hintText: "Prénom",),
+                  emailFormField(size: size, controller: emailController,prefixIcon: Icons.email_outlined,),
+                  FormFieldPassword(size: size, controller: passwordController,preixIcon:Icons.lock_outline,obscuretext: obscureText,suffixIcon: IconButton(
+                    icon: obscureText ?SuffixPassword:Icon(Icons.visibility_off),
+                    color: obscureText ? Colors.blueAccent:Colors.white,
+                    onPressed: (){
+                      setState(() {
+                        this.obscureText=!obscureText;
+
+                      });
+                    },
+                  ),),
+                  !loading?BuildLoginButton(size,ConstStrings.CreateAccount,(){
+
+                    registerUserVerification(context);
+                  }):CircularProgressIndicator.adaptive(),
 
                 ],
-              ),
-              DividerBox(size: size,height: 0.01,),
-              nameFormField(size: size, controller: usernameController,preixIcon: Icons.account_circle_sharp,),
-              emailFormField(size: size, controller: emailController,prefixIcon: Icons.email_outlined,),
-              FormFieldPassword(size: size, controller: passwordController,preixIcon:Icons.lock_outline,obscuretext: obscureText,suffixIcon: IconButton(
-                icon: obscureText ?SuffixPassword:Icon(Icons.visibility_off),
-                color: obscureText ? Colors.blueAccent:Colors.white,
-                onPressed: (){
-                  setState(() {
-                    this.obscureText=!obscureText;
-
-                  });
-                },
               ),),
-              !loading?BuildLoginButton(size,ConstStrings.CreateAccount,(){
-
-                registerUserVerification(context);
-              }):CircularProgressIndicator.adaptive(),
-              Container(
-                padding:  EdgeInsets.only(top:200, bottom: 10),
-                decoration: BoxDecoration(
-                    border: Border(bottom: BorderSide(
-                      color: Colors.white,  // Text colour here
-                      width: 1.0, // Underline width
-                    ))
-                ),
-                child: GestureDetector(onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> CreateAccount()));
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Login()));
-                }, child:Text("Vous avez déjà un compte ?",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20
-
-                  ),),
-                ),
-              )
+            )
             ],
           ),
         ),
