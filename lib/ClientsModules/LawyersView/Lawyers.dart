@@ -83,7 +83,7 @@ class _LawyersState extends State<Lawyers> {
     for (int i = 0; i < snapshot.docs.length; i++) {
       map["$i"] = snapshot.docs[i].data();
     }
-    print(map);
+
     return map;
   }
 
@@ -91,7 +91,7 @@ class _LawyersState extends State<Lawyers> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getUserData();
+
     getTest();
   }
 
@@ -148,8 +148,12 @@ class _LawyersState extends State<Lawyers> {
                                         children: [
                                           InkWell(
                                             onTap: () async{
-                                            await   Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>Messenger(label:"${snapshot.data['$index']['name']} ${snapshot.data['$index']['lastname']} "
-                                                ,email:"${snapshot.data['$index']['email']}")));
+                                            await   Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>Messenger(
+                                                label:"${snapshot.data['$index']['name']} ${snapshot.data['$index']['lastname']} "
+                                                ,email:"${snapshot.data['$index']['email']}"
+                                                ,profil:"${snapshot.data['$index']['url']}"
+
+                                            )));
                                             },
                                             child: Container(
                                               child: Card(
@@ -176,7 +180,7 @@ class _LawyersState extends State<Lawyers> {
                                                                 borderRadius: BorderRadius.circular(20)
                                                               ),
                                                               child: Image.network(
-                                                                'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
+                                                                "${snapshot.data['$index']['url']}",
                                                                 fit: BoxFit.fill,
                                                                 height: size.height * 0.1,
                                                                 width: 100,
@@ -203,7 +207,7 @@ class _LawyersState extends State<Lawyers> {
                                                                   Container(
                                                                     child: Row(
                                                                       children: [
-                                                                        Text('10'),
+                                                                        Text("${snapshot.data['$index']['rate']}"),
                                                                         Icon(
                                                                           Icons
                                                                               .star_rate_sharp,
@@ -223,7 +227,9 @@ class _LawyersState extends State<Lawyers> {
                                                         SizedBox(
                                                           height: size.height * 0.01,
                                                         ),
-                                                        Text('Lorem Ipsum is simply dummy text of the printing and typesetting industry.'),
+                                                        Text("${snapshot.data['$index']['desc']}",
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow.ellipsis,),
                                                       ],
                                                     ),
                                                   ),

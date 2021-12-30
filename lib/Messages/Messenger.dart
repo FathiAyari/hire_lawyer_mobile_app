@@ -3,20 +3,24 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hire_lawyer/ClientsModules/Register/infoMessage.dart';
 import '../ClientsModules/HomePage/HomePage.dart';
 import '../Login/emailFormField.dart';
 import '../Values/Strings.dart';
+import 'Messages.dart';
 import 'ReceiverBubble.dart';
 import 'SenderBubble.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 final snapshotMessages = FirebaseFirestore.instance;
 ScrollController controller = new ScrollController();
 
 class Messenger extends StatefulWidget {
   final String label;
+  final String profil;
   final String email;
-  const Messenger({this.label, this.email});
+
+  const Messenger({this.label, this.email, this.profil});
 
   @override
   _MessengerState createState() => _MessengerState();
@@ -29,25 +33,18 @@ class _MessengerState extends State<Messenger> {
   ScrollController controller = new ScrollController();
   TextEditingController messageController = new TextEditingController();
   @override
-  Future<void> messageStreams() async {
-    var snapshotMessages =
-        await FirebaseFirestore.instance.collection('messages').snapshots();
-    await for (var snapshot
-        in FirebaseFirestore.instance.collection('messages').snapshots()) {
+/*  Future<void> messageStreams() async {
+    var snapshotMessages = await FirebaseFirestore.instance.collection('messages').snapshots();
+    await for (var snapshot in FirebaseFirestore.instance.collection('messages').snapshots()) {
       for (var message in snapshot.docs) {
         print(message.data());
       }
     }
-  }
-
-/*  Future <void> getMessages() async {
-    var snapshotMessages = await FirebaseFirestore.instance.collection('messages').get();
-    for(var message in snapshotMessages.docs){
-      print(message.data());
-    }
   }*/
+
+
   Future<void> getUserData() async {
-     String uid;
+    String uid;
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = auth.currentUser;
 
@@ -86,7 +83,7 @@ class _MessengerState extends State<Messenger> {
                       IconButton(
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => HomePage()));
+                                builder: (context) => buildMessages()));
                           },
                           icon: Icon(Icons.arrow_back_ios)),
                       SizedBox(
@@ -94,11 +91,11 @@ class _MessengerState extends State<Messenger> {
                       ),
                       CircleAvatar(
                         radius: 25,
-                        backgroundColor: Colors.green,
+                        backgroundColor:  Colors.green,
                         child: CircleAvatar(
                           radius: 20,
                           backgroundImage: NetworkImage(
-                              'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg'),
+                              "${widget.profil}"),
                         ),
                       ),
                       SizedBox(
@@ -118,13 +115,15 @@ class _MessengerState extends State<Messenger> {
                 flex: 10,
                 child: Container(
                   child: Column(
-
                     children: [
-                      MessageStreamBuilder(eamil: widget.email,)
+                      MessageStreamBuilder(
+                        email: widget.email,
+                      )
                     ],
                   ),
                 )),
             Expanded(
+              flex: 2,
               child: Container(
                 alignment: Alignment.bottomCenter,
                 child: TextFormField(
@@ -133,19 +132,38 @@ class _MessengerState extends State<Messenger> {
                   },
                   keyboardType: TextInputType.emailAddress,
                   controller: messageController,
+
                   decoration: InputDecoration(
+
                       suffixIcon: IconButton(
                         icon: Icon(Icons.send),
                         onPressed: () {
-                          print(uid);
-                          messageStreams();
-                          messageController.clear();
-                          snapshotMessages.collection('messages').add({
-                            'text': "$textMessage",
-                            'destination': "${widget.email}",
-                            'sender': "$uid",
-                            'time':FieldValue.serverTimestamp(),
-                          });
+                          if (messageController.text.endsWith(" ")  ) {
+                            InfoMessage(
+                              press: (){
+                                Navigator.pop(context);
+                              },
+                              message: "Message ne doit pas contenir espace seulement",
+
+                            ).show(context);
+                          }else  if (messageController.text.isEmpty) {
+                            InfoMessage(
+                                press: (){
+                              Navigator.pop(context);
+                            },
+                          message: "Message ne peut pas etre vide",
+                            ).show(context);
+
+                          }
+                          else {
+                            messageController.clear();
+                            snapshotMessages.collection('messages').add({
+                              'text': "$textMessage",
+                              'destination': "${widget.email}",
+                              'sender': "$uid",
+                              'time': FieldValue.serverTimestamp(),
+                            });
+                          }
                         },
                         color: Colors.blueAccent,
                       ),
@@ -170,6 +188,12 @@ class _MessengerState extends State<Messenger> {
 }
 
 
+
+
+
+
+
+
 class MessageLine extends StatefulWidget {
   final String getText;
   final String getSender;
@@ -179,22 +203,21 @@ class MessageLine extends StatefulWidget {
 
   const MessageLine({
     Key key,
-    @required this.getText, this.getSender, this.getDestination, this.check, this.getTime,
+    @required this.getText,
+    this.getSender,
+    this.getDestination,
+    this.check,
+    this.getTime,
   }) : super(key: key);
-
-
 
   @override
   _MessageLineState createState() => _MessageLineState();
 }
 
 class _MessageLineState extends State<MessageLine> {
-
   Future<void> getUserData() async {
-
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = auth.currentUser;
-
 
     return user.email;
   }
@@ -204,17 +227,27 @@ class _MessageLineState extends State<MessageLine> {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Column(
-        crossAxisAlignment: widget.check ? CrossAxisAlignment.end:CrossAxisAlignment.start,
+        crossAxisAlignment:
+            widget.check ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Material(
-            borderRadius: widget.check ?BorderRadius.only(topLeft: Radius.circular(30),bottomRight: Radius.circular(30),bottomLeft: Radius.circular(30)):
-            BorderRadius.only(topRight: Radius.circular(30),bottomRight: Radius.circular(30),bottomLeft: Radius.circular(30)),
-            color: Colors.blueAccent,
+            borderRadius: widget.check
+                ? BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                    bottomLeft: Radius.circular(30))
+                : BorderRadius.only(
+                    topRight: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                    bottomLeft: Radius.circular(30)),
+            color: widget.check
+                ? Colors.blueAccent
+                : Colors.black87.withOpacity(0.5),
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10 ,horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: Text(
-                "${widget.getText }",
-                style: TextStyle(fontSize: 20,color: widget.check ?Colors.white:Colors.red),
+                "${widget.getText}",
+                style: TextStyle(fontSize: 20, color: Colors.white),
               ),
             ),
           ),
@@ -222,7 +255,6 @@ class _MessageLineState extends State<MessageLine> {
       ),
     );
   }
-
 }
 
 /*class MessageLine extends StatelessWidget {
@@ -263,17 +295,17 @@ class _MessageLineState extends State<MessageLine> {
   }
 }*/
 class MessageStreamBuilder extends StatefulWidget {
-  final String eamil;
+  final String email;
   const MessageStreamBuilder({
     Key key,
-    @required  this.eamil,
+    @required this.email,
   }) : super(key: key);
   @override
   _MessageStreamBuilderState createState() => _MessageStreamBuilderState();
 }
 
 class _MessageStreamBuilderState extends State<MessageStreamBuilder> {
-   String uid;
+  String uid;
   ScrollController controller = new ScrollController();
   Future<void> getUserData() async {
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -282,55 +314,59 @@ class _MessageStreamBuilderState extends State<MessageStreamBuilder> {
     setState(() {
       uid = user.email;
     });
-
   }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-getUserData();
+    getUserData();
     Timer(
       Duration(seconds: 1),
-          () => controller.jumpTo(controller.position.maxScrollExtent),
+      () => controller.jumpTo(controller.position.maxScrollExtent),
     );
   }
+
   @override
   Widget build(BuildContext context) {
-    return   StreamBuilder<QuerySnapshot>(
+    return StreamBuilder<QuerySnapshot>(
       stream:
-      snapshotMessages.collection('messages').orderBy('time').snapshots(),
+          snapshotMessages.collection('messages').orderBy('time').snapshots(),
       builder: (context, snapshot) {
         List<MessageLine> msg = [];
         if (!snapshot.hasData) {
 
-          return Center(child: CircularProgressIndicator(),);
-
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         }
         final messages = snapshot.data.docs.reversed;
         for (var message in messages) {
+
           final getText = message.get('text');
           final getSender = message.get('sender');
           final getDestination = message.get('destination');
           final getTime = message.get('time');
-          for(var i =0;i<msg.length-1;i++){
-
-
-          }
-          if(getSender==uid && getDestination==widget.eamil){
-            final messageWidget = MessageLine(getText: getText,getSender: getSender,getDestination: getDestination,check: uid==getSender?true:false ,);
+          for (var i = 0; i < msg.length - 1; i++) {}
+          if ((getSender == uid && getDestination == widget.email) ||
+              (getSender == widget.email && getDestination == uid)) {
+            final messageWidget = MessageLine(
+              getText: getText,
+              getSender: getSender,
+              getDestination: getDestination,
+              check: uid == getSender ? true : false,
+            );
             msg.add(messageWidget);
           }
-
         }
 
         return Expanded(
             child: ListView(
-              reverse: true,
-              padding: EdgeInsets.all(20),
-
-              controller: controller,
-              children: msg,
-            ));
+          reverse: true,
+          padding: EdgeInsets.all(20),
+          controller: controller,
+          children: msg,
+        ));
       },
     );
   }

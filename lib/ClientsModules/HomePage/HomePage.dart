@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
         this.connected=!connected;
       });
     }),
-      buildMessages(context),
+      buildMessages(),
       buildProfile(),
 
 

@@ -2,8 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ReceiverBubble extends StatelessWidget {
+  final message;
   const ReceiverBubble({
-    Key key,
+    Key key, this.message,
   }) : super(key: key);
 
   @override
@@ -31,7 +32,7 @@ class ReceiverBubble extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
 
-                      "Le Lorem Ipsum est simplement du faux texte employé dans laLorem Ipsum est simplement du faux texte employé dans la composition et la ",
+                    "$message"
 
                     ),
                   ),

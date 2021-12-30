@@ -22,7 +22,7 @@ this.connected, this.press, this.userName});
 
 class _buildHomePageState extends State<buildHomePage> {
 String userName="";
-String userRole="";
+
   List<Content> contentList = [
     Content(image: 'assets/images/family-room.png', footer: 'Droit de la famille'),
     Content(image: 'assets/images/home.png', footer: 'Loi de properiété'),
@@ -32,16 +32,6 @@ String userRole="";
     Content(image: 'assets/images/employement.png', footer: 'Droit de travaille'),
   ];
 
-/*  Future<void> getUserData()async{
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User user = auth.currentUser;
-    final uid = user.email;
-
-    setState(()  {
-    userEmail=uid;
-
-  });
-  }*/
 
   Future<void> getUserData()async{
     final FirebaseAuth auth = await FirebaseAuth.instance;
@@ -117,7 +107,7 @@ setState(() {
                 ),
               ],
             ),
-            Container(
+        /*    Container(
               clipBehavior: Clip.antiAliasWithSaveLayer,
               height: 200,
               width: size.width * 0.9,
@@ -139,13 +129,16 @@ setState(() {
                 showIndicator: true,
                 indicatorBgPadding: 7.0,
                 images: [
-
+                  Image.asset('assets/images/hire_lawyer.png'),
                   Image.asset('assets/images/texting.png'),
                   Image.asset('assets/images/answer.png'),
+
 
                 ],
               ),
             ),
+          */
+
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
