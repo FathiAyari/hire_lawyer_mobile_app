@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_storage: ^10.2.0
   carousel_pro: ^1.0.0
+  emoji_picker_flutter: ^1.0.8
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
@@ -51,6 +53,7 @@ dev_dependencies:
   flutter_local_notifications: 7.0.0
   connectivity: ^3.0.6
   provider: ^6.0.1
+  emoji_picker_flutter: ^1.0.8
 flutter_icons:
   android: true
   ios: true

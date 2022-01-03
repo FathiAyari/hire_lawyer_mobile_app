@@ -50,11 +50,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
 
     List pages=[
-      buildHomePage(connected:connected,press:(){
-      setState(() {
-        this.connected=!connected;
-      });
-    }),
+      buildHomePage(),
       buildMessages(),
       buildProfile(),
 
