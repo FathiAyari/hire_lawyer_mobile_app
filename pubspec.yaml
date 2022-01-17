@@ -39,6 +39,7 @@ dependencies:
   carousel_pro: ^1.0.0
   emoji_picker_flutter: ^1.0.8
   intl: ^0.17.0
+  bottom_navy_bar: ^6.0.0
 
 dev_dependencies:
   flutter_test:

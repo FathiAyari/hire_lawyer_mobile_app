@@ -1,24 +1,22 @@
 import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hire_lawyer/ClientsModules/HomePage/HomePage.dart';
 import 'package:hire_lawyer/ClientsModules/Register/CreateAccount.dart';
 import 'package:hire_lawyer/ClientsModules/Register/infoMessage.dart';
-import 'package:hire_lawyer/Real_time_internet_connection_check/Connectivity_provider.dart';
-import 'package:hire_lawyer/Real_time_internet_connection_check/NoInternetConnection.dart';
 import 'package:hire_lawyer/Services/AuthServices.dart';
-import 'package:hire_lawyer/Services/DbServices.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-import '../LawyersModules/LawyerHomePage.dart';
+
 import '../ForgotPassword/ForgotPassword.dart';
+import '../LawyersModules/LawyerHomePage.dart';
 import '../Values/Strings.dart';
 import 'ActionButton.dart';
 import 'DividerBox.dart';
 import 'FormFieldPassword.dart';
 import 'emailFormField.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:provider/provider.dart';
+
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
@@ -27,19 +25,20 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   Widget Positive() {
     return Container(
-      decoration: BoxDecoration(
-          color: Colors.blueAccent
-      ),
+      decoration: BoxDecoration(color: Colors.blueAccent),
       child: TextButton(
           onPressed: () {
             exit(0);
           },
-          child: Text(" Oui",
+          child: Text(
+            " Oui",
             style: TextStyle(
-              color:Color(0xffEAEDEF),
-            ),)),
+              color: Color(0xffEAEDEF),
+            ),
+          )),
     );
   }
+
   Widget Negative(BuildContext context) {
     return TextButton(
         onPressed: () {
@@ -47,6 +46,7 @@ class _LoginState extends State<Login> {
         },
         child: Text(" Non"));
   }
+
   bool hasConnection = false;
   bool loading = false;
   bool obscureText = true;
@@ -63,31 +63,33 @@ class _LoginState extends State<Login> {
     }
     return result;
   }
+
   loginerUserVerif(BuildContext context) async {
-setState(() {
-  loading=true;
-});
+    setState(() {
+      loading = true;
+    });
     bool check;
-      String str = verifyInput();
+    String str = verifyInput();
     if (str.isNotEmpty) {
       InfoMessage(
         message: str,
         press: () {
           Navigator.pop(context);
           setState(() {
-            loading=false;
+            loading = false;
           });
         },
       ).show(context);
-    } else{
-      try{
-        check= await AuthServices().signIn(emailController.text,passwordController.text);
+    } else {
+      try {
+        check = await AuthServices()
+            .signIn(emailController.text, passwordController.text);
         final FirebaseAuth auth = await FirebaseAuth.instance;
         final User user = await auth.currentUser;
         final uid = user.uid;
         var snapshotName =
-        await FirebaseFirestore.instance.collection('users').doc(uid).get();
-        if(check){
+            await FirebaseFirestore.instance.collection('users').doc(uid).get();
+        if (check) {
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -95,27 +97,24 @@ setState(() {
                       ? HomePageLawyer()
                       : HomePage()));
         }
-      } catch (e){
+      } catch (e) {
         setState(() {
-          loading=false;
+          loading = false;
         });
         return InfoMessage(
-          message:"Verfiez votre connexion internet",
+          message: "Verfiez votre connexion internet",
           press: () {
             setState(() {
-              loading=false;
+              loading = false;
             });
             Navigator.pop(context);
           },
         ).show(context);
       }
     }
-
-
   }
+
   @override
-
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -183,7 +182,7 @@ setState(() {
                 ),
                 Padding(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 60, vertical: 45),
+                      const EdgeInsets.symmetric(horizontal: 60, vertical: 45),
                   child: Container(
                     alignment: Alignment.centerRight,
                     child: GestureDetector(
@@ -202,8 +201,8 @@ setState(() {
                 ),
                 !loading
                     ? BuildLoginButton(size, ConstStrings.Login, () {
-                  loginerUserVerif(context);
-                })
+                        loginerUserVerif(context);
+                      })
                     : CircularProgressIndicator.adaptive(),
                 SizedBox(
                   height: size.height * 0.25,
@@ -212,9 +211,9 @@ setState(() {
                   decoration: BoxDecoration(
                       border: Border(
                           bottom: BorderSide(
-                            color: Colors.white, // Text colour here
-                            width: 1.0, // Underline width
-                          ))),
+                    color: Colors.white, // Text colour here
+                    width: 1.0, // Underline width
+                  ))),
                   child: GestureDetector(
                     onTap: () {
                       Navigator.pushReplacement(
@@ -235,6 +234,4 @@ setState(() {
       ),
     );
   }
-
-
 }

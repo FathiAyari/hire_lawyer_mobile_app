@@ -7,25 +7,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:hire_lawyer/ClientsModules/Register/infoMessage.dart';
-import 'Messages.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+
+import 'lawyerMessages.dart';
 
 final snapshotMessages = FirebaseFirestore.instance;
 ScrollController controller = new ScrollController();
 
-class Messenger extends StatefulWidget {
+class MessengerLawyer extends StatefulWidget {
   final String label;
   final String profil;
   final String email;
 
-  const Messenger({this.label, this.email, this.profil});
+  const MessengerLawyer({this.label, this.email, this.profil});
 
   @override
   _MessengerState createState() => _MessengerState();
 }
 
-class _MessengerState extends State<Messenger> {
+class _MessengerState extends State<MessengerLawyer> {
   String textMessage = "";
   String uid;
   bool isShowSticker=false;
@@ -79,7 +81,7 @@ class _MessengerState extends State<Messenger> {
                             await SystemChannels.textInput.invokeMethod('TextInput.hide');
 
                             Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                builder: (context) => buildMessages()));
+                                builder: (context) => MessagesLawyer()));
                           },
                           icon: Icon(Icons.arrow_back_ios)),
                       SizedBox(
@@ -119,7 +121,7 @@ class _MessengerState extends State<Messenger> {
                   ),
                 )),
             Expanded(
-            flex: inputFlex,
+              flex: inputFlex,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Container(
@@ -131,7 +133,7 @@ class _MessengerState extends State<Messenger> {
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
-                           color: Color(0xff3ba58a),
+                            color: Color(0xff3ba58a),
                             borderRadius: BorderRadius.circular(30)
                         ),
                         child: GestureDetector(
@@ -153,14 +155,14 @@ class _MessengerState extends State<Messenger> {
 
                           onKey: (event) {
                             if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
-                             setState(() {
-                              /* inputFlex=inputFlex+1;*/
-                               numLines = '\n'.allMatches(messageController.text).length + 1;
-                               print(numLines);
-                             if(numLines<3){
-                               inputFlex=numLines;
-                             }
-                             });
+                              setState(() {
+                                /* inputFlex=inputFlex+1;*/
+                                numLines = '\n'.allMatches(messageController.text).length + 1;
+                                print(numLines);
+                                if(numLines<3){
+                                  inputFlex=numLines;
+                                }
+                              });
                             }
                           },
                           child: TextField(
@@ -177,17 +179,17 @@ class _MessengerState extends State<Messenger> {
                             decoration: InputDecoration(
                                 isDense: true,
                                 contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
-                            suffixIcon: GestureDetector(
-                              onTap: ()async {
+                                suffixIcon: GestureDetector(
+                                  onTap: ()async {
 
-                              },
-                              child: IconButton(
+                                  },
+                                  child: IconButton(
 
 
 
-                                icon: Icon(Icons.emoji_emotions_outlined,),
-                                ),
-                            ) ,
+                                    icon: Icon(Icons.emoji_emotions_outlined,),
+                                  ),
+                                ) ,
                                 hintText: "   Ecrire un message",
                                 hintStyle: TextStyle(
                                   color: Colors.blueAccent,
@@ -212,7 +214,7 @@ class _MessengerState extends State<Messenger> {
                         width: 50,
                         decoration: BoxDecoration(
                             color: Color(0xff00a984),
-                          borderRadius: BorderRadius.circular(50)
+                            borderRadius: BorderRadius.circular(50)
                         ),
                         child: IconButton(
                           icon: Icon(Icons.send,color: Colors.white,),
@@ -309,18 +311,18 @@ class _MessageLineState extends State<MessageLine> {
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Column(
         crossAxisAlignment:
-            widget.check ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        widget.check ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Material(
             borderRadius: widget.check
                 ? BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15),
-                    bottomLeft: Radius.circular(15))
+                topLeft: Radius.circular(15),
+                bottomRight: Radius.circular(15),
+                bottomLeft: Radius.circular(15))
                 : BorderRadius.only(
-                    topRight: Radius.circular(20),
-                    bottomRight: Radius.circular(20),
-                    bottomLeft: Radius.circular(20)),
+                topRight: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+                bottomLeft: Radius.circular(20)),
             color: widget.check
                 ? Color(0xff5a40a1)
                 : Color(0xffe6ebf5),
@@ -409,7 +411,7 @@ class _MessageStreamBuilderState extends State<MessageStreamBuilder> {
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream:
-          snapshotMessages.collection('messages').orderBy('time').snapshots(),
+      snapshotMessages.collection('messages').orderBy('time').snapshots(),
       builder: (context, snapshot) {
         List<MessageLine> msg = [];
         if (!snapshot.hasData) {
@@ -442,16 +444,16 @@ class _MessageStreamBuilderState extends State<MessageStreamBuilder> {
 
           }
         }
-SchedulerBinding.instance.addPostFrameCallback((_) {
-  controller.animateTo(controller.position.minScrollExtent, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
-});//scroll to the end of listview
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          controller.animateTo(controller.position.minScrollExtent, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
+        });//scroll to the end of listview
         return Expanded(
             child: ListView(
-          reverse: true,
-          padding: EdgeInsets.all(20),
-          controller: controller,
-          children:msg,
-        ));
+              reverse: true,
+              padding: EdgeInsets.all(20),
+              controller: controller,
+              children:msg,
+            ));
       },
     );
   }

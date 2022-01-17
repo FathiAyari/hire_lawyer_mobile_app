@@ -1,3 +1,4 @@
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,10 +16,30 @@ class _HomePageState extends State<HomePageLawyer> {
   int currentIndex = 0;
   bool connected=true;
   String user;
-  List <Widget>items=[
+  List <BottomNavyBarItem>items=[
 
-    Icon(Icons.email_outlined),
-    Icon(Icons.account_circle_outlined)
+    BottomNavyBarItem(
+      icon: Stack(
+        children: [
+          Icon(Icons.email_outlined),
+          CircleAvatar(
+            radius: 5,
+            backgroundColor: Colors.red,
+            child: Text("1",style: TextStyle(
+                fontSize: 5,
+                fontWeight: FontWeight.bold
+            ),),
+          ),
+        ],
+      ),
+      title: Text("Messages"),
+      activeColor: Colors.green,
+    ),
+    BottomNavyBarItem(
+      icon:Icon(Icons.account_circle_outlined),
+      title: Text("Profil"),
+      activeColor: Colors.deepPurpleAccent,
+    ),
 
   ];
 
@@ -28,7 +49,7 @@ class _HomePageState extends State<HomePageLawyer> {
 
     List pages=[
 
-      buildMessagesLawyer(context),
+      MessagesLawyer(),
       LawyerPersonalProfile(),
 
 
@@ -44,18 +65,17 @@ class _HomePageState extends State<HomePageLawyer> {
           child: pages[currentIndex],
         ),
       ),
-      bottomNavigationBar: CurvedNavigationBar(
-        buttonBackgroundColor:Color(0xff848DFF),
-        backgroundColor: Color(0xffEAEDEF),
-        animationDuration: Duration(milliseconds: 700),
-        height: 60,
-        index: currentIndex,
-        onTap: (int index) {
+      bottomNavigationBar: BottomNavyBar(
+        onItemSelected: (int value) {
           setState(() {
-            currentIndex=index;
+            currentIndex=value;
           });
         },
+        selectedIndex: currentIndex,
         items: items,
+        backgroundColor: Color(0xffEAEDEF),
+        showElevation: false,
+
       ),
     );
   }

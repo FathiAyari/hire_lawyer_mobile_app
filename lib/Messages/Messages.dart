@@ -44,7 +44,7 @@ class _buildMessagesState extends State<buildMessages> {
     return SafeArea(
       child: Scaffold(
         body: Container(
-          color:  Color(0xffEAEDEF),
+          color:  Colors.white,
           child: Column(
             children: [
               Align(
@@ -63,7 +63,7 @@ class _buildMessagesState extends State<buildMessages> {
                         width: size.width * 0.15,
                       ),
                       Text(
-                        ConstStrings.Messgaes,
+                        ConstStrings.Messages,
                         style: TextStyle(
                             fontSize: size.height * 0.028,
                             fontFamily: "NewsCycle-Bold"),
@@ -141,7 +141,10 @@ class _buildMessagesState extends State<buildMessages> {
                 }
                        print(msg);
 
-                     }else return Text("no messages");
+                     }else return  Column(children: [
+                        Image.asset('assets/images/msg.png'),
+                        Text("Pas des messages encore.")
+                      ],);
 
                       return Column(
                         children: [

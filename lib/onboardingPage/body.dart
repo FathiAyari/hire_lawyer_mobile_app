@@ -17,7 +17,7 @@ class _BodyState extends State<Body> {
     int isViewed = 0;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('Onboard', isViewed);
-    print(isViewed);
+
 
 
   }

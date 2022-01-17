@@ -1,37 +1,38 @@
 import 'dart:io';
 
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import '../../Messages/Messages.dart';
 import '../ProfileClient.dart';
 import 'Pages.dart';
 
 class HomePage extends StatefulWidget {
   @override
-
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
-  bool connected=true;
+  bool connected = true;
   String user;
   Widget Positive() {
     return Container(
-      decoration: BoxDecoration(
-          color: Colors.blueAccent
-      ),
+      decoration: BoxDecoration(color: Colors.blueAccent),
       child: TextButton(
           onPressed: () {
             exit(0);
           },
-          child: Text(" Oui",
+          child: Text(
+            " Oui",
             style: TextStyle(
-              color:Color(0xffEAEDEF),
-            ),)),
+              color: Color(0xffEAEDEF),
+            ),
+          )),
     );
   }
+
   Widget Negative(BuildContext context) {
     return TextButton(
         onPressed: () {
@@ -39,25 +40,45 @@ class _HomePageState extends State<HomePage> {
         },
         child: Text(" Non"));
   }
-  List <Widget>items=[
-     Icon(Icons.home_outlined),
-     Icon(Icons.email_outlined),
-     Icon(Icons.account_circle_outlined)
+
+  List<BottomNavyBarItem> items = [
+    BottomNavyBarItem(
+      icon: Icon(Icons.home_outlined),
+      title: Text("Acceuil"),
+      activeColor: Colors.cyan,
+    ),
+    BottomNavyBarItem(
+      icon: Stack(
+        children: [
+          Icon(Icons.email_outlined),
+          CircleAvatar(
+            radius: 5,
+            backgroundColor: Colors.red,
+            child: Text(
+              "1",
+              style: TextStyle(fontSize: 5, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+      title: Text("Messages"),
+      activeColor: Colors.green,
+    ),
+    BottomNavyBarItem(
+      icon: Icon(Icons.account_circle_outlined),
+      title: Text("Profil"),
+      activeColor: Colors.deepPurpleAccent,
+    ),
   ];
 
   @override
-
   Widget build(BuildContext context) {
-
-    List pages=[
+    List pages = [
       buildHomePage(),
       buildMessages(),
       buildProfile(),
-
-
     ];
     return Scaffold(
-
       body: WillPopScope(
         onWillPop: () {
           return showDialog(
@@ -70,30 +91,27 @@ class _HomePageState extends State<HomePage> {
               });
         },
         child: SafeArea(
-
           child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(bottomRight:  Radius.circular(40),bottomLeft:  Radius.circular(40),)
-              ),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(40),
+              bottomLeft: Radius.circular(40),
+            )),
             child: pages[currentIndex],
           ),
         ),
       ),
-      bottomNavigationBar: CurvedNavigationBar(
-        buttonBackgroundColor:Color(0xff848DFF),
-        backgroundColor: Color(0xffEAEDEF),
-        animationDuration: Duration(milliseconds: 700),
-        height: 60,
-        index: currentIndex,
-        onTap: (int index) {
+      bottomNavigationBar: BottomNavyBar(
+        onItemSelected: (int value) {
           setState(() {
-            currentIndex=index;
+            currentIndex = value;
           });
         },
+        selectedIndex: currentIndex,
         items: items,
+        backgroundColor: Color(0xffEAEDEF),
+        showElevation: false,
       ),
     );
   }
-
-
 }
