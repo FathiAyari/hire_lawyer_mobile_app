@@ -1,13 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hire_lawyer/ClientsModules/HomePage/HomePage.dart';
 import 'package:hire_lawyer/Login/DividerBox.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:hire_lawyer/Messages/Messenger.dart';
-import 'package:hire_lawyer/Models/Users.dart';
-import 'LawyersLabels.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Lawyers extends StatefulWidget {
   final String footer;
@@ -21,21 +18,32 @@ class _LawyersState extends State<Lawyers> {
   List lawyersList = [""];
   Map test = {};
 
-  String getIndex(){
+  String getIndex() {
     String index;
-    switch(widget.footer){
-      case "Droit de la famille":index="family_law";break;
-      case "Loi de properiété":index="orperty_law";break;
-      case "Loi criminele":index="criminal_law";break;
-      case "Infractiosn de la circulation":index="infraction_law";break;
-      case "Blessurre personelle":index="personal_injury";break;
-      case "Droit de travaille":index="labour_law";break;
-
+    switch (widget.footer) {
+      case "Droit de la famille":
+        index = "family_law";
+        break;
+      case "Loi de properiété":
+        index = "orperty_law";
+        break;
+      case "Loi criminele":
+        index = "criminal_law";
+        break;
+      case "Infractiosn de la circulation":
+        index = "infraction_law";
+        break;
+      case "Blessurre personelle":
+        index = "personal_injury";
+        break;
+      case "Droit de travaille":
+        index = "labour_law";
+        break;
     }
     return index;
   }
-  getTest() {
 
+/*  getTest() {
     var mediaReference =
         FirebaseDatabase.instance.reference().child("${widget.footer}");
     mediaReference.onValue.listen((event) {
@@ -50,12 +58,11 @@ class _LawyersState extends State<Lawyers> {
 
       setState(() {});
     });
-  }
+  }*/
 
   Future<void> getUserData() async {
     final FirebaseAuth auth = await FirebaseAuth.instance;
-    final User user = await auth.currentUser;
-    final uid = user.uid;
+
 /*
     var snapshotNametest = await FirebaseFirestore
         .instance
@@ -91,8 +98,6 @@ class _LawyersState extends State<Lawyers> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    getTest();
   }
 
   @override
@@ -147,13 +152,17 @@ class _LawyersState extends State<Lawyers> {
                                       child: Stack(
                                         children: [
                                           InkWell(
-                                            onTap: () async{
-                                            await   Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>Messenger(
-                                                label:"${snapshot.data['$index']['name']} ${snapshot.data['$index']['lastname']} "
-                                                ,email:"${snapshot.data['$index']['email']}"
-                                                ,profil:"${snapshot.data['$index']['url']}"
-
-                                            )));
+                                            onTap: () async {
+                                              await Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) => Messenger(
+                                                          label:
+                                                              "${snapshot.data['$index']['name']} ${snapshot.data['$index']['lastname']} ",
+                                                          email:
+                                                              "${snapshot.data['$index']['email']}",
+                                                          profil:
+                                                              "${snapshot.data['$index']['url']}")));
                                             },
                                             child: Container(
                                               child: Card(
@@ -167,52 +176,65 @@ class _LawyersState extends State<Lawyers> {
                                                 elevation: 3,
                                                 child: Container(
                                                   child: Container(
-                                                    margin: EdgeInsets.only(top: 15,left: 40),
+                                                    margin: EdgeInsets.only(
+                                                        top: 15, left: 40),
                                                     child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: [
                                                         Row(
-
                                                           children: [
                                                             Container(
-                                                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                                                              decoration:BoxDecoration(
-                                                                borderRadius: BorderRadius.circular(20)
-                                                              ),
-                                                              child: Image.network(
+                                                              clipBehavior: Clip
+                                                                  .antiAliasWithSaveLayer,
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              20)),
+                                                              child:
+                                                                  Image.network(
                                                                 "${snapshot.data['$index']['url']}",
-                                                                fit: BoxFit.fill,
-                                                                height: size.height * 0.1,
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                                height:
+                                                                    size.height *
+                                                                        0.1,
                                                                 width: 100,
                                                               ),
                                                             ),
                                                             SizedBox(
-                                                              width: size.width * 0.05,
+                                                              width:
+                                                                  size.width *
+                                                                      0.05,
                                                             ),
                                                             Expanded(
                                                               child: Row(
                                                                 mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
                                                                 children: [
                                                                   Expanded(
                                                                     child: Text(
-                                                                        "${snapshot.data['$index']['name']} ${snapshot.data['$index']['lastname']} ",
-                                                                    style: TextStyle(
-                                                                      fontSize: size.height * 0.02,
-                                                                      fontFamily: "EBGaramond"
-                                                                    ),),
+                                                                      "${snapshot.data['$index']['name']} ${snapshot.data['$index']['lastname']} ",
+                                                                      style: TextStyle(
+                                                                          fontSize: size.height *
+                                                                              0.02,
+                                                                          fontFamily:
+                                                                              "EBGaramond"),
+                                                                    ),
                                                                   ),
-
                                                                   Container(
                                                                     child: Row(
                                                                       children: [
-                                                                        Text("${snapshot.data['$index']['rate']}"),
+                                                                        Text(
+                                                                            "${snapshot.data['$index']['rate']}"),
                                                                         Icon(
                                                                           Icons
                                                                               .star_rate_sharp,
-                                                                          color: Colors
-                                                                              .amber,
+                                                                          color:
+                                                                              Colors.amber,
                                                                         )
                                                                       ],
                                                                     ),
@@ -221,15 +243,17 @@ class _LawyersState extends State<Lawyers> {
                                                               ),
                                                             ),
                                                           ],
-
                                                         ),
-
                                                         SizedBox(
-                                                          height: size.height * 0.01,
+                                                          height: size.height *
+                                                              0.01,
                                                         ),
-                                                        Text("${snapshot.data['$index']['desc']}",
+                                                        Text(
+                                                          "${snapshot.data['$index']['desc']}",
                                                           maxLines: 2,
-                                                          overflow: TextOverflow.ellipsis,),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
                                                       ],
                                                     ),
                                                   ),
@@ -260,7 +284,6 @@ class _LawyersState extends State<Lawyers> {
                                         ],
                                       ),
                                     ),
-
                                   ],
                                 );
                               });

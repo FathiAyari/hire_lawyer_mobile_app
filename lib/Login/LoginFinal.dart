@@ -4,9 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/utils.dart';
 import 'package:hire_lawyer/ClientsModules/HomePage/HomePage.dart';
 import 'package:hire_lawyer/ClientsModules/Register/CreateAccount.dart';
 import 'package:hire_lawyer/ClientsModules/Register/infoMessage.dart';
+import 'package:hire_lawyer/Login/remember_controller.dart';
+import 'package:hire_lawyer/Models/Users.dart';
 import 'package:hire_lawyer/Services/AuthServices.dart';
 
 import '../ForgotPassword/ForgotPassword.dart';
@@ -47,6 +51,7 @@ class _LoginState extends State<Login> {
         child: Text(" Non"));
   }
 
+  final controller = RememberController();
   bool hasConnection = false;
   bool loading = false;
   bool obscureText = true;
@@ -84,18 +89,23 @@ class _LoginState extends State<Login> {
       try {
         check = await AuthServices()
             .signIn(emailController.text, passwordController.text);
+
         final FirebaseAuth auth = await FirebaseAuth.instance;
         final User user = await auth.currentUser;
         final uid = user.uid;
         var snapshotName =
             await FirebaseFirestore.instance.collection('users').doc(uid).get();
         if (check) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => snapshotName["role"] == "Admin"
-                      ? HomePageLawyer()
-                      : HomePage()));
+          if (snapshotName["role"] == "Admin") {
+            await controller.RememberLawyer(
+                Cusers.fromJson(snapshotName.data()));
+            Get.to(() => HomePageLawyer());
+          } else {
+            await controller.RememberClient(
+                Cusers.fromJson(snapshotName.data()));
+
+            Get.to(() => HomePage());
+          }
         }
       } catch (e) {
         setState(() {

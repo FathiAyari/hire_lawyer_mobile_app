@@ -1,15 +1,14 @@
 import 'dart:async';
-import 'dart:collection';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:hire_lawyer/ClientsModules/Register/infoMessage.dart';
+
 import 'Messages.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
 final snapshotMessages = FirebaseFirestore.instance;
 ScrollController controller = new ScrollController();
@@ -28,18 +27,15 @@ class Messenger extends StatefulWidget {
 class _MessengerState extends State<Messenger> {
   String textMessage = "";
   String uid;
-  bool isShowSticker=false;
-  bool showKeyBoard=false;
+  bool isShowSticker = false;
+  bool showKeyBoard = false;
   var focusNode = FocusNode();
-  var inputFlex=1;
+  var inputFlex = 1;
   var numLines;
 
   ScrollController controller = new ScrollController();
   TextEditingController messageController = new TextEditingController();
   @override
-
-
-
   Future<void> getUserData() async {
     String uid;
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -55,7 +51,6 @@ class _MessengerState extends State<Messenger> {
     // TODO: implement initState
     super.initState();
     getUserData();
-
   }
 
   @override
@@ -76,10 +71,12 @@ class _MessengerState extends State<Messenger> {
                     children: [
                       IconButton(
                           onPressed: () async {
-                            await SystemChannels.textInput.invokeMethod('TextInput.hide');
+                            await SystemChannels.textInput
+                                .invokeMethod('TextInput.hide');
 
-                            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                builder: (context) => buildMessages()));
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => buildMessages()));
                           },
                           icon: Icon(Icons.arrow_back_ios)),
                       SizedBox(
@@ -87,11 +84,10 @@ class _MessengerState extends State<Messenger> {
                       ),
                       CircleAvatar(
                         radius: 25,
-                        backgroundColor:  Colors.green,
+                        backgroundColor: Colors.green,
                         child: CircleAvatar(
                           radius: 20,
-                          backgroundImage: NetworkImage(
-                              "${widget.profil}"),
+                          backgroundImage: NetworkImage("${widget.profil}"),
                         ),
                       ),
                       SizedBox(
@@ -119,7 +115,7 @@ class _MessengerState extends State<Messenger> {
                   ),
                 )),
             Expanded(
-            flex: inputFlex,
+              flex: inputFlex,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Container(
@@ -131,77 +127,74 @@ class _MessengerState extends State<Messenger> {
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
-                           color: Color(0xff3ba58a),
-                            borderRadius: BorderRadius.circular(30)
-                        ),
+                            color: Color(0xff3ba58a),
+                            borderRadius: BorderRadius.circular(30)),
                         child: GestureDetector(
-                          onTap: () {
-
-                          },
+                          onTap: () {},
                           child: IconButton(
-
-
-
-                            icon: Icon(Icons.camera_alt_outlined,color: Colors.white),
+                            icon: Icon(Icons.camera_alt_outlined,
+                                color: Colors.white),
                           ),
-                        ) ,
+                        ),
                       ),
-                      SizedBox(width: 5,),
+                      SizedBox(
+                        width: 5,
+                      ),
                       Expanded(
                         child: RawKeyboardListener(
                           focusNode: focusNode,
-
                           onKey: (event) {
                             if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
-                             setState(() {
-                              /* inputFlex=inputFlex+1;*/
-                               numLines = '\n'.allMatches(messageController.text).length + 1;
-                               print(numLines);
-                             if(numLines<3){
-                               inputFlex=numLines;
-                             }
-                             });
+                              setState(() {
+                                /* inputFlex=inputFlex+1;*/
+                                numLines = '\n'
+                                        .allMatches(messageController.text)
+                                        .length +
+                                    1;
+
+                                if (numLines < 3) {
+                                  inputFlex = numLines;
+                                }
+                              });
                             }
                           },
                           child: TextField(
-
-
                             maxLines: null,
                             onChanged: (value) {
                               textMessage = value;
                             },
                             keyboardType: TextInputType.multiline,
-
                             controller: messageController,
-
                             decoration: InputDecoration(
                                 isDense: true,
-                                contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
-                            suffixIcon: GestureDetector(
-                              onTap: ()async {
-
-                              },
-                              child: IconButton(
-
-
-
-                                icon: Icon(Icons.emoji_emotions_outlined,),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 20),
+                                suffixIcon: GestureDetector(
+                                  onTap: () async {},
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.emoji_emotions_outlined,
+                                    ),
+                                  ),
                                 ),
-                            ) ,
                                 hintText: "   Ecrire un message",
                                 hintStyle: TextStyle(
                                   color: Colors.blueAccent,
                                 ),
-                                fillColor:
-                                Color(0xffe6ebf5), // the color of the inside box field
+                                fillColor: Color(
+                                    0xffe6ebf5), // the color of the inside box field
                                 filled: true,
-                                enabledBorder:  OutlineInputBorder(
-                                  borderSide: const BorderSide(color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(30), //borderradius
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      color: Colors.transparent),
+                                  borderRadius:
+                                      BorderRadius.circular(30), //borderradius
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(color: Colors.transparent),
-                                  borderRadius: BorderRadius.circular(30), //borderradius
+                                  borderSide: const BorderSide(
+                                      color: Colors.transparent),
+                                  borderRadius:
+                                      BorderRadius.circular(30), //borderradius
                                 )),
                           ),
                         ),
@@ -212,30 +205,29 @@ class _MessengerState extends State<Messenger> {
                         width: 50,
                         decoration: BoxDecoration(
                             color: Color(0xff00a984),
-                          borderRadius: BorderRadius.circular(50)
-                        ),
+                            borderRadius: BorderRadius.circular(50)),
                         child: IconButton(
-                          icon: Icon(Icons.send,color: Colors.white,),
+                          icon: Icon(
+                            Icons.send,
+                            color: Colors.white,
+                          ),
                           onPressed: () {
-                            if (messageController.text.endsWith(" ")  ) {
-
+                            if (messageController.text.endsWith(" ")) {
                               InfoMessage(
-                                press: (){
+                                press: () {
                                   Navigator.pop(context);
                                 },
-                                message: "Message ne doit pas contenir espace seulement",
-
+                                message:
+                                    "Message ne doit pas contenir espace seulement",
                               ).show(context);
-                            }else  if (messageController.text.isEmpty) {
+                            } else if (messageController.text.isEmpty) {
                               InfoMessage(
-                                press: (){
+                                press: () {
                                   Navigator.pop(context);
                                 },
                                 message: "Message ne peut pas etre vide",
                               ).show(context);
-
-                            }
-                            else {
+                            } else {
                               messageController.clear();
 
                               snapshotMessages.collection('messages').add({
@@ -245,35 +237,24 @@ class _MessengerState extends State<Messenger> {
                                 'time': FieldValue.serverTimestamp(),
                               });
                               setState(() {
-                                inputFlex=1;
+                                inputFlex = 1;
                               });
                             }
                           },
                           color: Colors.blueAccent,
                         ),
                       )
-
                     ],
                   ),
-
                 ),
               ),
             ),
-
-
           ],
         ),
       ),
     );
   }
 }
-
-
-
-
-
-
-
 
 class MessageLine extends StatefulWidget {
   final String getText;
@@ -321,14 +302,14 @@ class _MessageLineState extends State<MessageLine> {
                     topRight: Radius.circular(20),
                     bottomRight: Radius.circular(20),
                     bottomLeft: Radius.circular(20)),
-            color: widget.check
-                ? Color(0xff5a40a1)
-                : Color(0xffe6ebf5),
+            color: widget.check ? Color(0xff5a40a1) : Color(0xffe6ebf5),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: Text(
                 "${widget.getText}",
-                style: TextStyle(fontSize: 20, color: widget.check?Colors.white:Colors.black),
+                style: TextStyle(
+                    fontSize: 20,
+                    color: widget.check ? Colors.white : Colors.black),
               ),
             ),
           ),
@@ -338,43 +319,7 @@ class _MessageLineState extends State<MessageLine> {
   }
 }
 
-/*class MessageLine extends StatelessWidget {
-  final String getText;
-  final String getSender;
-  final String getDestination;
-  final String getTime;
-  final bool check;
-  const MessageLine({
-    Key key,
-    @required this.getText, this.getSender, this.getDestination, this.check, this.getTime,
-  }) : super(key: key);
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        crossAxisAlignment: check ? CrossAxisAlignment.end:CrossAxisAlignment.start,
-        children: [
-          Material(
-            borderRadius: check ?BorderRadius.only(topLeft: Radius.circular(30),bottomRight: Radius.circular(30),bottomLeft: Radius.circular(30)):
-            BorderRadius.only(topRight: Radius.circular(30),bottomRight: Radius.circular(30),bottomLeft: Radius.circular(30)),
-            color: Colors.blueAccent,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10 ,horizontal: 20),
-              child: Text(
-                "$getSender $getDestination",
-                style: TextStyle(fontSize: 20,color: check ?Colors.white:Colors.red),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}*/
+//tous les messages
 class MessageStreamBuilder extends StatefulWidget {
   final String email;
   const MessageStreamBuilder({
@@ -402,7 +347,6 @@ class _MessageStreamBuilderState extends State<MessageStreamBuilder> {
     // TODO: implement initState
     super.initState();
     getUserData();
-
   }
 
   @override
@@ -413,14 +357,12 @@ class _MessageStreamBuilderState extends State<MessageStreamBuilder> {
       builder: (context, snapshot) {
         List<MessageLine> msg = [];
         if (!snapshot.hasData) {
-
           return Center(
             child: CircularProgressIndicator(),
           );
         }
         final messages = snapshot.data.docs.reversed;
         for (var message in messages) {
-
           final getText = message.get('text');
           final getSender = message.get('sender');
           final getDestination = message.get('destination');
@@ -435,55 +377,21 @@ class _MessageStreamBuilderState extends State<MessageStreamBuilder> {
               check: uid == getSender ? true : false,
             );
 
-
-
             msg.add(messageWidget);
-            print(msg);
-
           }
         }
-SchedulerBinding.instance.addPostFrameCallback((_) {
-  controller.animateTo(controller.position.minScrollExtent, duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
-});//scroll to the end of listview
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          controller.animateTo(controller.position.minScrollExtent,
+              duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
+        }); //scroll to the end of listview
         return Expanded(
             child: ListView(
           reverse: true,
           padding: EdgeInsets.all(20),
           controller: controller,
-          children:msg,
+          children: msg,
         ));
       },
     );
   }
-}
-Widget buildSticker() {
-  return EmojiPicker(
-    onEmojiSelected: (category, emoji) {
-      // Do something when emoji is tapped
-    },
-    onBackspacePressed: () {
-      // Backspace-Button tapped logic
-      // Remove this line to also remove the button in the UI
-    },
-    config: Config(
-        columns: 7,
-
-        verticalSpacing: 0,
-        horizontalSpacing: 0,
-        initCategory: Category.RECENT,
-        bgColor: Color(0xFFF2F2F2),
-        indicatorColor: Colors.blue,
-        iconColor: Colors.grey,
-        iconColorSelected: Colors.blue,
-        progressIndicatorColor: Colors.blue,
-        showRecentsTab: true,
-        recentsLimit: 28,
-        noRecentsText: "No Recents",
-        noRecentsStyle:
-        const TextStyle(fontSize: 20, color: Colors.black26),
-        tabIndicatorAnimDuration: kTabScrollDuration,
-        categoryIcons: const CategoryIcons(),
-        buttonMode: ButtonMode.MATERIAL
-    ),
-  );
 }

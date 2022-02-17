@@ -1,14 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:hire_lawyer/Login/Login.dart';
-import 'package:hire_lawyer/Real_time_internet_connection_check/Connectivity_provider.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hire_lawyer/splashScreen/splash_screen.dart';
-import 'package:provider/provider.dart';
 
-import 'Real_time_internet_connection_check/NoInternetConnection.dart';
-
-int isViewed;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -21,6 +17,8 @@ Future<void> main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   await Firebase.initializeApp();
+  await GetStorage.init();
+
   runApp(MyApp());
 }
 
@@ -28,21 +26,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => ConnectivityProvider(),
-          child:  SplasScreen(),
-        )
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: Scaffold(
-          body: SplasScreen(),
-        ),
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: Scaffold(
+        body: SplasScreen(),
       ),
     );
   }
