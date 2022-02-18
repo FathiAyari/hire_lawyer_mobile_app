@@ -97,7 +97,7 @@ class _buildHomePageState extends State<buildHomePage> {
                         ),
                         CircleAvatar(
                           radius: 30,
-                          child: Image.network("sd"),
+                          backgroundImage: NetworkImage("${user["url"]}."),
                         )
                       ],
                     ),

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hire_lawyer/Login/DividerBox.dart';
 import 'package:hire_lawyer/Login/LoginFinal.dart';
 import 'package:hire_lawyer/Login/remember_controller.dart';
@@ -21,7 +22,8 @@ class _buildProfileState extends State<buildProfile> {
   var controller = RememberController();
   String name = "";
   String lastname = "";
-  String picProfile = "";
+
+  var user = GetStorage().read("user");
   Future<void> getUserData() async {
     final FirebaseAuth auth = await FirebaseAuth.instance;
     final User user = await auth.currentUser;
@@ -32,7 +34,6 @@ class _buildProfileState extends State<buildProfile> {
       emailController.text = snapshotName["Email"];
       name = snapshotName["name"];
       lastname = snapshotName["lastname"];
-      picProfile = snapshotName["url"];
     });
   }
 
@@ -79,7 +80,7 @@ class _buildProfileState extends State<buildProfile> {
           ),
           CircleAvatar(
             radius: 70,
-            backgroundImage: NetworkImage("${picProfile}"),
+            backgroundImage: NetworkImage("${user["url"]}"),
           ),
           DividerBox(
             size: size,
@@ -101,7 +102,7 @@ class _buildProfileState extends State<buildProfile> {
                 keyboardType: TextInputType.emailAddress,
                 controller: emailController,
                 decoration: InputDecoration(
-                    hintText: "${emailController.text}",
+                    hintText: "${user["email"]}",
                     hintStyle: TextStyle(
                       color: Colors.blueAccent,
                     ),
