@@ -43,23 +43,6 @@ class _LawyersState extends State<Lawyers> {
     return index;
   }
 
-/*  getTest() {
-    var mediaReference =
-        FirebaseDatabase.instance.reference().child("${widget.footer}");
-    mediaReference.onValue.listen((event) {
-      lawyersList.clear();
-      test.clear();
-      Map map = Map<String, dynamic>();
-      for (int i = 0; i < event.snapshot.value.length; i++) {
-        map["$i"] = event.snapshot.value[i];
-      }
-      lawyersList.add(map);
-      test = map;
-
-      setState(() {});
-    });
-  }*/
-
   Future<void> getUserData() async {
     final FirebaseAuth auth = await FirebaseAuth.instance;
 
